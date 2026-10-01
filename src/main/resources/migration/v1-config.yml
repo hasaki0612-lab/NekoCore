@@ -1,0 +1,65 @@
+# NekoCore · Momo Land
+# /nekocore reload 重载。数据库文件名修改后需要完整重启服务器。
+database:
+  filename: nekocore.db
+  save-interval-seconds: 30
+
+survival:
+  world: world
+  # 由控制台执行，保留 Multiverse-Inventories 的 last_location。
+  command: 'mvtp {player} ll:{world}'
+
+leveling:
+  # 当前 level 升到下一级所需经验：base + linear*(level-1) + quadratic*(level-1)^2
+  # /nekocore exp set 设置「累计总经验」；界面与 %nekocore_exp% 显示本级进度。
+  base: 100
+  linear: 50
+  quadratic: 0
+  max-level: 10000
+
+cleanup:
+  enabled: true
+  # 示例 10 分钟，可修改；最小 61 秒，保证完整的 60/20/5..1 提醒。
+  interval-seconds: 600
+  sound:
+    enabled: true
+    name: minecraft:block.note_block.pling
+    volume: 0.6
+    pitch: 1.6
+
+gui:
+  title: '&8Momo Land &7· &d服务器面板'
+  rows: 3
+  # 槽位从 0 开始；四个功能槽位必须不同且在 GUI 范围内。
+  filler:
+    material: LIGHT_GRAY_STAINED_GLASS_PANE
+    name: ' '
+  items:
+    profile:
+      slot: 10
+      material: PLAYER_HEAD
+      name: '&b玩家资料 &7· &f{player}'
+      lore:
+        - '&7等级：&f{level} &8| &7经验：&f{exp}/{exp_needed}'
+        - '&7金币：&e{coins}'
+        - '&7游玩时长：&f{playtime}'
+        - ''
+        - '&b点击查看详细资料'
+    daily:
+      slot: 12
+      material: BOOK
+      name: '&e每日任务'
+      lore: ['&7即将开放', '&8猫猫正在准备中 ฅ^•ﻌ•^ฅ']
+    survival:
+      slot: 14
+      material: GRASS_BLOCK
+      name: '&a生存世界入口'
+      lore: ['&7目标世界：&f{world}', '&7继续上次的冒险', '', '&a点击前往']
+    privacy:
+      slot: 16
+      material: NAME_TAG
+      name: '&d是否显示 IP 地址'
+      lore:
+        - '&7你的选择：{show_ip}'
+        - '&7点击切换个人隐私偏好'
+        - '&8本阶段仅保存开关，不采集或展示 IP'

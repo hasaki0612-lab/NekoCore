@@ -1,0 +1,440 @@
+# NekoCore 1.3.1 · Momo Land 清新柔彩主题
+config-version: 7
+database:
+  filename: nekocore.db
+  save-interval-seconds: 30
+survival:
+  world: world
+  # 普通世界入口，交给 Multiverse 前往该世界公共出生点。
+  command: 'mvtp {player} {world}'
+survival-new:
+  world: world_new
+  command: 'mvtp {player} {world}'
+home:
+  bed-auto-set:
+    enabled: true
+    # 成功躺下后，在床边寻找安全站立位置；不改原版重生点或睡眠机制。
+    # 世界名区分大小写。列表为空或 enabled: false 时不自动设置。
+    worlds: [world, world_new]
+minigames:
+  world: lobby
+  x: 27.5
+  y: 53.0
+  z: 21.5
+  yaw: 0.0
+  pitch: 0.0
+location-prefix:
+  enabled: true
+  # 管理员自行放置 GeoLite2-City.mmdb；JAR 不附带任何 GeoIP 数据库。
+  database-file: GeoLite2-City.mmdb
+  cache-session: true
+  show-china-province: true
+  show-foreign-country: true
+  hide-unknown: true
+afk-pool:
+  enabled: true
+  # lobby 中唯一水体即挂机池；无需 WorldGuard 区域。
+  world: lobby
+  teleport:
+    x: -10.5
+    y: 54.0
+    z: 33.5
+    yaw: 180.0
+    pitch: 0.0
+  exit-grace-seconds: 3
+  reward:
+    interval-seconds: 300
+    base-exp: 10
+    normal-multiplier: 1.10
+    coin-chance: 0.45
+    coin-min: 1
+    coin-max: 4
+  title:
+    enabled: true
+    hide-while-inventory-open: true
+    # 停止刷新后约 2.5 秒内自然淡出，不主动 clearTitle。
+    stay-ticks: 40
+    fade-out-ticks: 10
+tab:
+  enabled: true
+  # 只控制全局 TAB 玩家列表；聊天仍由玩家自己的“显示网络地区”隐私开关决定。
+  show-location-prefix: true
+  # 全服共用一个刷新任务；数值来自 Paper 和 NekoCore 内存缓存，不查询数据库。
+  refresh-seconds: 1
+leveling:
+  # 当前 L 级升到下一级：base + linear*(L-1) + quadratic*(L-1)^2
+  base: 100
+  linear: 50
+  quadratic: 0
+  max-level: 10000
+cleanup:
+  enabled: true
+  interval-seconds: 600
+  sound:
+    enabled: true
+    name: minecraft:block.note_block.pling
+    volume: 0.6
+    pitch: 1.6
+tips:
+  enabled: true
+  interval-seconds: 300
+  prefix: '&#9FD9F6tips &f>> '
+  # 每轮只播报一条，末尾后回到第一条。重载后从第一条重新计时。
+  messages:
+    - '&f输入 &#9FD9F6/spawn &f返回主城，冒险累了就回来歇一会儿。'
+    - '&f输入 &#9FD9F6/menu &f打开服务器面板，挑一个想去的地方吧。'
+    - '&f睡床或用 &#9FD9F6/sethome &f记下小窝，&#9FD9F6/home world &f能回生存一区。'
+    - '&f生存二区的小窝也单独保存，输入 &#9FD9F6/home world_new &f就能回来。'
+    - '&f输入 &#9FD9F6/check home world &f看看小窝的坐标。'
+    - '&f输入 &#9FD9F6/checkin &f领取今天的小礼物，慢慢积攒冒险金币。'
+    - '&f输入 &#9FD9F6/coins &f看看小金库，今天又存了多少呢？'
+    - '&f缺一点材料？输入 &#9FD9F6/store &f逛逛商店，右键买入、左键出售。'
+    - '&f输入 &#9FD9F6/bag &f查看随身物品；在两个生存世界可以取放，大厅只读。'
+    - '&f想和朋友汇合？输入 &#9FD9F6/tpn <玩家名> &f送出一个传送请求。'
+    - '&f收到传送请求时，输入 &#B6E3D0/yes &f让朋友来到你身边。'
+    - '&f暂时不方便汇合？输入 &#EDB9CE/no &f就能婉拒传送请求。'
+    - '&f想休息一下？&#9FD9F6/menu &f里可以去挂机池坐一会儿～'
+    - '&f主城挂机池会慢慢积累一点 EXP，还有机会捞到小金币哦。'
+    - '&f打开 &#9FD9F6/menu &f看看今日任务，简单、普通、困难各有三份小目标。'
+checkin:
+  enabled: true
+  # 每个自然日一次，不是每隔 24 小时；在线跨日无需重进。
+  timezone: Asia/Shanghai
+  coins: 100
+  exp: 50
+  sound:
+    name: minecraft:block.amethyst_block.chime
+    volume: 0.6
+    pitch: 1.4
+  # 仅向签到者显示少量白色 END_ROD 粒子；0 可关闭。
+  particle-count: 16
+chat:
+  # 已有聊天插件使用 %nekocore_display_prefix% 时改为 false，避免重复。
+  level-prefix-enabled: true
+  level-prefix: '&#9FD9F6[&fLv.{level}&#9FD9F6] &r'
+gui:
+  title: '&#9FD9F6Momo Land &7· &#9FD9F6服务器面板'
+  rows: 5
+  filler:
+    material: LIGHT_GRAY_STAINED_GLASS_PANE
+    name: ' '
+  items:
+    profile:
+      slot: 10
+      material: PLAYER_HEAD
+      name: '&#9FD9F6玩家资料 &7· &f{player}'
+      lore:
+        - '&#B2C3CF等级 &f{level} &7· &#B2C3CF经验 &f{exp}/{exp_needed}'
+        - '&#B2C3CF金币 &f{coins}'
+        - '&#B2C3CF游玩时长 &f{playtime}'
+        - ''
+        - '&#C5E9FA点击看看自己的冒险足迹'
+    daily:
+      slot: 12
+      material: BOOK
+      name: '&#C5E9FA每日任务'
+      lore: ['&#B2C3CF简单、普通、困难各 3 个', '&#C5E9FA北京时间 00:00 换一套', '', '&f点击查看今日任务']
+    checkin:
+      slot: 14
+      material: SUNFLOWER
+      name: '&#9FD9F6每日签到'
+      lore:
+        - '&#B2C3CF今日状态：{checkin_status}'
+        - '&#B2C3CF小礼物：&#FFE49A{checkin_coins} 金币 &7+ &#FFE49A{checkin_exp} 经验'
+        - ''
+        - '&#C5E9FA每天见一面，成长多一点喵~'
+    privacy:
+      slot: 16
+      material: NAME_TAG
+      name: '&#C5E9FA显示网络地区'
+      lore: ['&#B2C3CF你的选择：{show_ip}', '&#C5E9FA点击切换个人隐私偏好', '&#B2C3CF只显示省份或国家，不公开完整 IP']
+    survival:
+      slot: 28
+      material: GRASS_BLOCK
+      name: '&#9FD9F6生存一区'
+      lore: ['&#B2C3CF世界 &f{world}', '&#C5E9FA前往生存一区公共出生点', '&#B2C3CF回小窝可用 &f/home {world}', '', '&f点击前往']
+    survival-new:
+      slot: 30
+      material: CHERRY_SAPLING
+      name: '&#C5E9FA生存二区'
+      lore: ['&#B2C3CF世界 &f{world_new}', '&#C5E9FA前往生存二区公共出生点', '&#B2C3CF回小窝可用 &f/home {world_new}', '', '&f点击前往']
+    minigames:
+      slot: 32
+      material: SLIME_BALL
+      name: '&#9FD9F6小游戏区'
+      lore: ['&#B2C3CF主城里的轻松时光', '&#C5E9FA和朋友一起玩一会儿喵~', '', '&f点击前往']
+    afk-pool:
+      slot: 34
+      material: WATER_BUCKET
+      name: '&#C5E9FA挂机池'
+      lore: ['&#B2C3CF主城里安静的小水池', '&#C5E9FA每隔一会儿收下一点 EXP', '&#B2C3CF偶尔还能捞到几枚金币 ✦', '', '&f点击前往']
+
+# 全服每天共用同一轮任务，玩家进度各自保存。稳定 task ID 不应随显示名修改。
+daily-tasks:
+  enabled: true
+  timezone: Asia/Shanghai
+  draw-count: {easy: 3, normal: 3, hard: 3}
+  # 一天全清默认共 345 金币 / 240 EXP；明显有梯度，但不会代替主要经济玩法。
+  rewards:
+    easy: {coins: 20, exp: 15}
+    normal: {coins: 35, exp: 25}
+    hard: {coins: 60, exp: 40}
+  pools:
+    easy: [simple_gardener, simple_healthy, simple_shear_sheep, simple_good_morning, simple_crafting, simple_eat_food, simple_pastoral]
+    normal: [normal_harvest, normal_dessert, normal_tax_collector, normal_cleanup, normal_deepslate_worker, normal_smelt, normal_blacksmith, normal_fishing]
+    hard: [hard_enchant, hard_tycoon, hard_marksman, hard_mlg_water, hard_iron_golem]
+  rules:
+    simple_gardener:
+      target: 16
+      blocks: [OAK_LEAVES, SPRUCE_LEAVES, BIRCH_LEAVES, JUNGLE_LEAVES, ACACIA_LEAVES, DARK_OAK_LEAVES, MANGROVE_LEAVES, CHERRY_LEAVES, AZALEA_LEAVES, FLOWERING_AZALEA_LEAVES, PALE_OAK_LEAVES, SHORT_GRASS, TALL_GRASS, FERN, LARGE_FERN, DANDELION, POPPY, BLUE_ORCHID, ALLIUM, AZURE_BLUET, RED_TULIP, ORANGE_TULIP, WHITE_TULIP, PINK_TULIP, OXEYE_DAISY, CORNFLOWER, LILY_OF_THE_VALLEY, TORCHFLOWER, PITCHER_PLANT, WITHER_ROSE, SUNFLOWER, LILAC, ROSE_BUSH, PEONY]
+    simple_healthy: {target: 1}
+    simple_shear_sheep: {target: 1}
+    simple_good_morning: {target-minutes: 20}
+    simple_crafting: {target: 5}
+    simple_eat_food: {target: 5}
+    simple_pastoral:
+      target: 8
+      materials: [WHEAT_SEEDS, BEETROOT_SEEDS, PUMPKIN_SEEDS, MELON_SEEDS, CARROT, POTATO]
+    normal_harvest:
+      target: 24
+      blocks: [WHEAT, CARROTS, POTATOES, BEETROOTS, NETHER_WART, COCOA]
+    # 内部以 9 为目标；蛋糕/南瓜派一次补满，曲奇按真实产出累积。
+    normal_dessert: {target: 9}
+    normal_tax_collector: {target: 1}
+    normal_cleanup: {target: 8}
+    normal_deepslate_worker:
+      target: 12
+      blocks: [DEEPSLATE_COAL_ORE, DEEPSLATE_IRON_ORE, DEEPSLATE_COPPER_ORE, DEEPSLATE_GOLD_ORE, DEEPSLATE_REDSTONE_ORE, DEEPSLATE_LAPIS_ORE, DEEPSLATE_DIAMOND_ORE, DEEPSLATE_EMERALD_ORE]
+    normal_smelt: {target: 16}
+    normal_blacksmith:
+      target: 3
+      materials: [IRON_PICKAXE, IRON_AXE, IRON_SHOVEL, IRON_HOE]
+    normal_fishing:
+      target: 3
+      materials: [COD, SALMON, PUFFERFISH, TROPICAL_FISH]
+    hard_enchant: {target: 1}
+    hard_tycoon: {target: 5}
+    hard_marksman:
+      target: 1
+      # HAPPY_GHAST（乐魂）在代码和配置校验中都被永久排除；普通 GHAST 可计入。
+      entities: [PHANTOM, GHAST, VEX, BEE, BAT, PARROT, ALLAY]
+    hard_mlg_water: {target: 1, minimum-height: 16}
+    hard_iron_golem: {target: 1}
+  gui:
+    filler: LIGHT_GRAY_STAINED_GLASS_PANE
+    easy-filler: LIME_STAINED_GLASS_PANE
+    normal-filler: LIGHT_BLUE_STAINED_GLASS_PANE
+    hard-filler: PINK_STAINED_GLASS_PANE
+    slots:
+      easy: [10, 13, 16]
+      normal: [19, 22, 25]
+      hard: [28, 31, 34]
+      back: 36
+      info: 40
+      close: 44
+  feedback:
+    sound: {name: 'minecraft:block.amethyst_block.chime', volume: 0.45, pitch: 1.65}
+    particle-count: 10
+
+# 头衔商店仅由管理员/控制台 /nekocore levelshop open <player> 打开。
+# 最高已拥有档位提供权益；当前装备项只决定外观，不会丢失已购买的权益。
+levelshop:
+  enabled: true
+  worlds: [lobby]
+  permissions:
+    auto-checkin: nekocore.perk.auto-checkin
+    colored-chat: nekocore.perk.colored-chat
+    fast-tpn: nekocore.perk.fast-tpn
+  titles:
+    mame:
+      name: Yuki
+      prefix: '&#B6E3D0[Yuki] &r'
+      material: SNOWBALL
+      slot: 11
+      rank: 1
+      price: 2500
+      auto-checkin: true
+      colored-chat: false
+      tpn-cooldown-seconds: 120
+      afk-exp-multiplier: 1.10
+      description: ['&f像初雪一样轻盈', '&#B2C3CF上线自动签到', '&#B2C3CF传送冷却 120 秒 · 挂机 EXP ×1.10']
+    momo:
+      name: Momo
+      prefix: '&#EDB9CE[Momo] &r'
+      material: PINK_PETALS
+      slot: 13
+      rank: 2
+      price: 7500
+      auto-checkin: true
+      colored-chat: true
+      tpn-cooldown-seconds: 60
+      afk-exp-multiplier: 1.10
+      description: ['&f桃色的冒险时光', '&#B2C3CF自动签到 · 安全聊天颜色', '&#B2C3CF传送冷却 60 秒 · 挂机 EXP ×1.10']
+    sora:
+      name: Neko
+      prefix: '&#CBBFEF[Neko] &r'
+      material: HEART_OF_THE_SEA
+      slot: 15
+      rank: 3
+      price: 20000
+      auto-checkin: true
+      colored-chat: true
+      tpn-cooldown-seconds: 30
+      afk-exp-multiplier: 1.20
+      description: ['&f猫猫守护着这段旅程', '&#B2C3CF自动签到 · 安全聊天颜色', '&#B2C3CF传送冷却 30 秒 · 挂机 EXP ×1.20']
+nametag:
+  enabled: true
+  # 只检查 scoreboard 是否被其他插件替换，不访问数据库；不抢占其他插件的 team。
+  scoreboard-check-seconds: 5
+bag:
+  enabled: true
+  # 白名单外全部只读，包括大厅和今后新增的世界。
+  writable-worlds: [world, world_new]
+  unlock-levels:
+    '27': 10
+    '36': 25
+  readonly-notice-seconds: 4
+tpn:
+  enabled: true
+  timeout-seconds: 60
+  cooldown-seconds: 180
+  fast-cooldown-seconds: 30
+  sound: {name: 'minecraft:block.amethyst_block.chime', volume: 0.6, pitch: 1.5}
+  particle-count: 12
+store:
+  enabled: true
+  category-rows: 4
+  default-sell-limit: 200
+  sell-price: {numerator: 2, denominator: 3}
+  input-timeout-seconds: 30
+  maximum-custom-quantity: 1000000
+  categories:
+    plants: {name: '植物与种子', material: WHEAT_SEEDS, slot: 10}
+    food: {name: '食物', material: BREAD, slot: 11}
+    equipment: {name: '武器与装备', material: IRON_SWORD, slot: 12}
+    tools: {name: '工具与杂物', material: IRON_PICKAXE, slot: 13}
+    redstone: {name: '红石机械', material: REDSTONE, slot: 14}
+    building: {name: '建筑材料', material: BRICKS, slot: 15}
+    enchantments: {name: '今日附魔书', material: ENCHANTED_BOOK, slot: 16}
+    special: {name: '冒险用品', material: ENDER_PEARL, slot: 22}
+  # 价格均为每件金币。省略 buy-limit = 此物品原版最大堆叠数；sell-limit 默认 200。
+  # 不要随意改商品 ID：它是每日限额的稳定标识。
+  products:
+    wheat_seeds: {category: plants, material: WHEAT_SEEDS, name: '小麦种子', price: 3, sell: true}
+    beetroot_seeds: {category: plants, material: BEETROOT_SEEDS, name: '甜菜种子', price: 3, sell: true}
+    pumpkin_seeds: {category: plants, material: PUMPKIN_SEEDS, name: '南瓜种子', price: 4, sell: true}
+    melon_seeds: {category: plants, material: MELON_SEEDS, name: '西瓜种子', price: 4, sell: true}
+    carrot: {category: plants, material: CARROT, name: '胡萝卜', price: 4, sell: true}
+    potato: {category: plants, material: POTATO, name: '马铃薯', price: 4, sell: true}
+    sugar_cane: {category: plants, material: SUGAR_CANE, name: '甘蔗', price: 4, sell: true}
+    bamboo: {category: plants, material: BAMBOO, name: '竹子', price: 3, sell: true}
+    oak_sapling: {category: plants, material: OAK_SAPLING, name: '橡树树苗', price: 6, sell: true}
+    spruce_sapling: {category: plants, material: SPRUCE_SAPLING, name: '云杉树苗', price: 7, sell: true}
+    birch_sapling: {category: plants, material: BIRCH_SAPLING, name: '白桦树苗', price: 7, sell: true}
+    dark_oak_sapling: {category: plants, material: DARK_OAK_SAPLING, name: '深色橡树树苗', price: 8, sell: true}
+    cherry_sapling: {category: plants, material: CHERRY_SAPLING, name: '樱花树苗', price: 9, sell: true}
+    mangrove_propagule: {category: plants, material: MANGROVE_PROPAGULE, name: '红树胎生苗', price: 9, sell: true}
+    dandelion: {category: plants, material: DANDELION, name: '蒲公英', price: 4, sell: true}
+    poppy: {category: plants, material: POPPY, name: '虞美人', price: 4, sell: true}
+    kelp: {category: plants, material: KELP, name: '海带', price: 3, sell: true}
+    glow_berries: {category: plants, material: GLOW_BERRIES, name: '发光浆果', price: 7, sell: true}
+    cactus: {category: plants, material: CACTUS, name: '仙人掌', price: 4, sell: true}
+    cocoa_beans: {category: plants, material: COCOA_BEANS, name: '可可豆', price: 5, sell: true}
+    bread: {category: food, material: BREAD, name: '面包', price: 9, sell: true}
+    baked_potato: {category: food, material: BAKED_POTATO, name: '烤马铃薯', price: 8, sell: true}
+    cooked_beef: {category: food, material: COOKED_BEEF, name: '牛排', price: 15, sell: true}
+    cooked_chicken: {category: food, material: COOKED_CHICKEN, name: '熟鸡肉', price: 12, sell: true}
+    cooked_porkchop: {category: food, material: COOKED_PORKCHOP, name: '熟猪排', price: 14, sell: true}
+    cooked_mutton: {category: food, material: COOKED_MUTTON, name: '熟羊肉', price: 14, sell: true}
+    cooked_cod: {category: food, material: COOKED_COD, name: '熟鳕鱼', price: 10, sell: true}
+    cooked_salmon: {category: food, material: COOKED_SALMON, name: '熟鲑鱼', price: 12, sell: true}
+    pumpkin_pie: {category: food, material: PUMPKIN_PIE, name: '南瓜派', price: 18, sell: true}
+    cookie: {category: food, material: COOKIE, name: '曲奇', price: 4, sell: true}
+    golden_carrot: {category: food, material: GOLDEN_CARROT, name: '金胡萝卜', price: 36, sell: true}
+    golden_apple: {category: food, material: GOLDEN_APPLE, name: '金苹果', price: 180, sell: true}
+    iron_sword: {category: equipment, material: IRON_SWORD, name: '铁剑', price: 160, sell: true}
+    iron_helmet: {category: equipment, material: IRON_HELMET, name: '铁头盔', price: 300, sell: true}
+    iron_chestplate: {category: equipment, material: IRON_CHESTPLATE, name: '铁胸甲', price: 480, sell: true}
+    iron_leggings: {category: equipment, material: IRON_LEGGINGS, name: '铁护腿', price: 420, sell: true}
+    iron_boots: {category: equipment, material: IRON_BOOTS, name: '铁靴子', price: 240, sell: true}
+    diamond_sword: {category: equipment, material: DIAMOND_SWORD, name: '钻石剑', price: 1800, sell: true}
+    diamond_helmet: {category: equipment, material: DIAMOND_HELMET, name: '钻石头盔', price: 2800, sell: true}
+    diamond_chestplate: {category: equipment, material: DIAMOND_CHESTPLATE, name: '钻石胸甲', price: 4800, sell: true}
+    diamond_leggings: {category: equipment, material: DIAMOND_LEGGINGS, name: '钻石护腿', price: 4000, sell: true}
+    diamond_boots: {category: equipment, material: DIAMOND_BOOTS, name: '钻石靴子', price: 2400, sell: true}
+    bow: {category: equipment, material: BOW, name: '弓', price: 120, sell: true}
+    shield: {category: equipment, material: SHIELD, name: '盾牌', price: 90, sell: true}
+    arrow: {category: equipment, material: ARROW, name: '箭', price: 5, sell: true}
+    iron_pickaxe: {category: tools, material: IRON_PICKAXE, name: '铁镐', price: 210, sell: true}
+    iron_axe: {category: tools, material: IRON_AXE, name: '铁斧', price: 210, sell: true}
+    iron_shovel: {category: tools, material: IRON_SHOVEL, name: '铁锹', price: 90, sell: true}
+    iron_hoe: {category: tools, material: IRON_HOE, name: '铁锄', price: 150, sell: true}
+    diamond_pickaxe: {category: tools, material: DIAMOND_PICKAXE, name: '钻石镐', price: 2400, sell: true}
+    diamond_axe: {category: tools, material: DIAMOND_AXE, name: '钻石斧', price: 2200, sell: true}
+    diamond_shovel: {category: tools, material: DIAMOND_SHOVEL, name: '钻石锹', price: 1200, sell: true}
+    diamond_hoe: {category: tools, material: DIAMOND_HOE, name: '钻石锄', price: 1600, sell: true}
+    shears: {category: tools, material: SHEARS, name: '剪刀', price: 140, sell: true}
+    bucket: {category: tools, material: BUCKET, name: '桶', price: 180, sell: true}
+    torch: {category: tools, material: TORCH, name: '火把', price: 3, sell: true}
+    lead: {category: tools, material: LEAD, name: '拴绳', price: 45, sell: true}
+    name_tag: {category: tools, material: NAME_TAG, name: '命名牌', price: 220, sell: true}
+    fishing_rod: {category: tools, material: FISHING_ROD, name: '钓鱼竿', price: 100, sell: true}
+    flint_and_steel: {category: tools, material: FLINT_AND_STEEL, name: '打火石', price: 120, sell: true}
+    compass: {category: tools, material: COMPASS, name: '指南针', price: 180, sell: true}
+    clock: {category: tools, material: CLOCK, name: '时钟', price: 300, sell: true}
+    brush: {category: tools, material: BRUSH, name: '刷子', price: 90, sell: true}
+    redstone: {category: redstone, material: REDSTONE, name: '红石粉', price: 9, sell: true}
+    repeater: {category: redstone, material: REPEATER, name: '红石中继器', price: 35, sell: true}
+    comparator: {category: redstone, material: COMPARATOR, name: '红石比较器', price: 55, sell: true}
+    piston: {category: redstone, material: PISTON, name: '活塞', price: 80, sell: true}
+    sticky_piston: {category: redstone, material: STICKY_PISTON, name: '黏性活塞', price: 120, sell: true}
+    observer: {category: redstone, material: OBSERVER, name: '侦测器', price: 60, sell: true}
+    hopper: {category: redstone, material: HOPPER, name: '漏斗', price: 340, sell: true}
+    dispenser: {category: redstone, material: DISPENSER, name: '发射器', price: 150, sell: true}
+    rail: {category: redstone, material: RAIL, name: '铁轨', price: 25, sell: true}
+    redstone_torch: {category: redstone, material: REDSTONE_TORCH, name: '红石火把', price: 12, sell: true}
+    lever: {category: redstone, material: LEVER, name: '拉杆', price: 10, sell: true}
+    stone_button: {category: redstone, material: STONE_BUTTON, name: '石质按钮', price: 6, sell: true}
+    dropper: {category: redstone, material: DROPPER, name: '投掷器', price: 110, sell: true}
+    daylight_detector: {category: redstone, material: DAYLIGHT_DETECTOR, name: '阳光探测器', price: 100, sell: true}
+    tripwire_hook: {category: redstone, material: TRIPWIRE_HOOK, name: '绊线钩', price: 30, sell: true}
+    target: {category: redstone, material: TARGET, name: '标靶', price: 80, sell: true}
+    stone: {category: building, material: STONE, name: '石头', price: 3, sell: true}
+    cobblestone: {category: building, material: COBBLESTONE, name: '圆石', price: 3, sell: true}
+    deepslate: {category: building, material: DEEPSLATE, name: '深板岩', price: 4, sell: true}
+    stone_bricks: {category: building, material: STONE_BRICKS, name: '石砖', price: 6, sell: true}
+    andesite: {category: building, material: ANDESITE, name: '安山岩', price: 4, sell: true}
+    diorite: {category: building, material: DIORITE, name: '闪长岩', price: 4, sell: true}
+    granite: {category: building, material: GRANITE, name: '花岗岩', price: 4, sell: true}
+    oak_log: {category: building, material: OAK_LOG, name: '橡木原木', price: 12, sell: true}
+    spruce_log: {category: building, material: SPRUCE_LOG, name: '云杉原木', price: 12, sell: true}
+    cherry_log: {category: building, material: CHERRY_LOG, name: '樱花原木', price: 15, sell: true}
+    glass: {category: building, material: GLASS, name: '玻璃', price: 6, sell: true}
+    glass_pane: {category: building, material: GLASS_PANE, name: '玻璃板', price: 3, sell: true}
+    light_blue_stained_glass: {category: building, material: LIGHT_BLUE_STAINED_GLASS, name: '淡蓝色玻璃', price: 8, sell: true}
+    sand: {category: building, material: SAND, name: '沙子', price: 4, sell: true}
+    bricks: {category: building, material: BRICKS, name: '红砖块', price: 24, sell: true}
+    white_concrete: {category: building, material: WHITE_CONCRETE, name: '白色混凝土', price: 9, sell: true}
+    light_blue_concrete: {category: building, material: LIGHT_BLUE_CONCRETE, name: '淡蓝色混凝土', price: 10, sell: true}
+    terracotta: {category: building, material: TERRACOTTA, name: '陶瓦', price: 7, sell: true}
+    oak_planks: {category: building, material: OAK_PLANKS, name: '橡木木板', price: 3, sell: true}
+    spruce_planks: {category: building, material: SPRUCE_PLANKS, name: '云杉木板', price: 3, sell: true}
+    sea_lantern: {category: building, material: SEA_LANTERN, name: '海晶灯', price: 75, sell: true}
+    quartz_block: {category: building, material: QUARTZ_BLOCK, name: '石英块', price: 72, sell: true}
+    ender_pearl: {category: special, material: ENDER_PEARL, name: '末影珍珠', price: 90, sell: true}
+    wind_charge: {category: special, material: WIND_CHARGE, name: '风弹', price: 45, sell: true}
+    trial_key: {category: special, material: TRIAL_KEY, name: '试炼钥匙', price: 900, sell: true}
+    ominous_trial_key: {category: special, material: OMINOUS_TRIAL_KEY, name: '不祥试炼钥匙', price: 1800, sell: true}
+    ender_eye: {category: special, material: ENDER_EYE, name: '末影之眼', price: 200, sell: true}
+    blaze_rod: {category: special, material: BLAZE_ROD, name: '烈焰棒', price: 150, sell: true}
+    saddle: {category: special, material: SADDLE, name: '鞍', price: 800, sell: true}
+    echo_shard: {category: special, material: ECHO_SHARD, name: '回响碎片', price: 1600, sell: true, buy-limit: 4}
+  enchantments:
+    # 持久化的一批 2 本原版最高等级 + 6 本低阶书；北京时间 04:00 换新。
+    # 低阶为 I~II 且严格低于原版最高等级；附魔书不回收。
+    pool: [protection, fire_protection, feather_falling, blast_protection, projectile_protection, respiration, aqua_affinity, thorns, depth_strider, frost_walker, sharpness, smite, bane_of_arthropods, knockback, fire_aspect, looting, sweeping_edge, efficiency, silk_touch, unbreaking, fortune, power, punch, flame, infinity, luck_of_the_sea, lure, loyalty, impaling, riptide, channeling, multishot, quick_charge, piercing, mending, soul_speed, swift_sneak, density, breach, wind_burst]
+    excluded: [binding_curse, vanishing_curse]
+    maximum-price: 1800
+    normal-price: 300
+    # 这里是每一本的覆盖价（不乘等级）；没写的用上面的对应档位价。
+    prices: {mending: 3600, silk_touch: 2400, infinity: 2400, swift_sneak: 2700, wind_burst: 3600}

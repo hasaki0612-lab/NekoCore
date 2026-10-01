@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - name: Verify and package
+        run: mvn -B clean verify
+      - name: Upload plugin JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: NekoCore-1.0.0
+          path: target/NekoCore-1.0.0.jar
+          if-no-files-found: error

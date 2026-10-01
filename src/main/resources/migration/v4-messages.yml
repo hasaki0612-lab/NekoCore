@@ -1,0 +1,16 @@
+messages-version: 4
+privacy-updated: '&fIP 显示偏好 · {show_ip} &#B2C3CF（仅保存偏好）'
+destination-arrived: '&#B6E3D0到达小游戏区，玩得开心。'
+reload-success: '&#B6E3D0配置已更新，清理与 tips 重新计时。'
+not-enough-coins: '&#EDB9CE金币还不够，先存一点再来看看吧。'
+title-purchased: |-
+  &#B6E3D0已拥有并装备 &#CBBFEF{title}
+  &#B2C3CF花费 &#FFE49A{price} &#B2C3CF· 剩余金币 &f{coins}
+store-bought: |-
+  &#B6E3D0已买到 &f{product} × {quantity}
+  &#B2C3CF花费 &#FFE49A{total} &#B2C3CF· 剩余金币 &f{coins}
+store-sold: |-
+  &#B6E3D0已售出 &f{product} × {quantity}
+  &#B2C3CF收入 &#FFE49A{total} &#B2C3CF· 当前金币 &f{coins}
+bag-readonly: '&#FFE49A这里的 Bag 只能查看，回到生存一区或二区再取放吧。'
+tpn-sent: '&f已向 &#9FD9F6{target} &f发出请求，&#B2C3CF等待对方在 {seconds}秒内回应。'

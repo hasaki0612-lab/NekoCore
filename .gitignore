@@ -1,0 +1,58 @@
+# Maven and Java
+/target/
+*.class
+*.jar
+*.log
+hs_err_pid*
+
+# IDE and operating-system files
+/.idea/
+/.vscode/
+*.iml
+.classpath
+.project
+.settings/
+.DS_Store
+Thumbs.db
+
+# Runtime data and secrets
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.mmdb
+plugins/
+server/
+logs/
+crash-reports/
+eula.txt
+server.properties
+bukkit.yml
+spigot.yml
+paper-global.yml
+paper-world-defaults.yml
+ops.json
+whitelist.json
+usercache.json
+banned-*.json
+world/
+world_nether/
+world_the_end/
+test-server/
+testing-server/
+run-server/
+
+# Local configuration and environment overrides
+.env
+.env.*
+!.env.example
+config.local.yml
+messages.local.yml
+
+# Temporary and release staging
+*.bak
+*.pre-*.bak
+*.tmp
+*.swp
+/release/

@@ -1,0 +1,111 @@
+# NekoCore 1.1 · Momo Land 清新淡蓝主题
+config-version: 2
+database:
+  filename: nekocore.db
+  save-interval-seconds: 30
+survival:
+  world: world
+  command: 'mvtp {player} ll:{world}'
+survival-new:
+  world: world_new
+  command: 'mvtp {player} ll:{world}'
+minigames:
+  world: lobby
+  x: 27.5
+  y: 53.0
+  z: 21.5
+  yaw: 0.0
+  pitch: 0.0
+leveling:
+  # 当前 L 级升到下一级：base + linear*(L-1) + quadratic*(L-1)^2
+  base: 100
+  linear: 50
+  quadratic: 0
+  max-level: 10000
+cleanup:
+  enabled: true
+  interval-seconds: 600
+  sound:
+    enabled: true
+    name: minecraft:block.note_block.pling
+    volume: 0.6
+    pitch: 1.6
+tips:
+  enabled: true
+  interval-seconds: 300
+  prefix: '&#9FD9F6tips &f>> '
+  # 每轮只播报一条，末尾后回到第一条。重载后从第一条重新计时。
+  messages:
+    - '&#C5E9FA输入 &f/spawn &#C5E9FA就能返回主城，冒险累了记得回家休息喵~'
+    - '&#C5E9FA输入 &f/menu &#C5E9FA打开服务器面板，新的旅程从这里开始喵。'
+    - '&#C5E9FA用 &f/sethome &#C5E9FA在当前世界留下小窝，再用 &f/home &#C5E9FA回家吧~'
+    - '&#C5E9FA想看看小窝在哪？输入 &f/check home world &#C5E9FA就能查看坐标喵。'
+    - '&#C5E9FA今天也来签到吧！打开 &f/menu &#C5E9FA或输入 &f/checkin &#C5E9FA领取每日小礼物~'
+    - '&#C5E9FA输入 &f/coins &#C5E9FA查看金币，慢慢积攒你的冒险小金库喵。'
+checkin:
+  enabled: true
+  # 每个自然日一次，不是每隔 24 小时；在线跨日无需重进。
+  timezone: Asia/Shanghai
+  coins: 100
+  exp: 50
+  sound:
+    name: minecraft:block.amethyst_block.chime
+    volume: 0.6
+    pitch: 1.4
+  # 仅向签到者显示少量白色 END_ROD 粒子；0 可关闭。
+  particle-count: 16
+chat:
+  # 已有聊天插件使用 %nekocore_level_prefix% 时改为 false，避免重复。
+  level-prefix-enabled: true
+  level-prefix: '&#9FD9F6[&fLv.{level}&#9FD9F6] &r'
+gui:
+  title: '&#9FD9F6Momo Land &7· &#9FD9F6服务器面板'
+  rows: 5
+  filler:
+    material: LIGHT_GRAY_STAINED_GLASS_PANE
+    name: ' '
+  items:
+    profile:
+      slot: 10
+      material: PLAYER_HEAD
+      name: '&#9FD9F6玩家资料 &7· &f{player}'
+      lore:
+        - '&#B2C3CF等级 &f{level} &7· &#B2C3CF经验 &f{exp}/{exp_needed}'
+        - '&#B2C3CF金币 &f{coins}'
+        - '&#B2C3CF游玩时长 &f{playtime}'
+        - ''
+        - '&#C5E9FA点击看看自己的冒险足迹'
+    daily:
+      slot: 12
+      material: BOOK
+      name: '&#C5E9FA每日任务'
+      lore: ['&#B2C3CF即将开放', '&#C5E9FA猫猫正在准备中 ฅ^•ﻌ•^ฅ']
+    checkin:
+      slot: 14
+      material: SUNFLOWER
+      name: '&#9FD9F6每日签到'
+      lore:
+        - '&#B2C3CF今日状态：{checkin_status}'
+        - '&#B2C3CF小礼物：&#FFE49A{checkin_coins} 金币 &7+ &#FFE49A{checkin_exp} 经验'
+        - ''
+        - '&#C5E9FA每天见一面，成长多一点喵~'
+    privacy:
+      slot: 16
+      material: NAME_TAG
+      name: '&#C5E9FA是否显示 IP 地址'
+      lore: ['&#B2C3CF你的选择：{show_ip}', '&#C5E9FA点击切换个人隐私偏好', '&#B2C3CF仅保存开关，不采集或展示 IP']
+    survival:
+      slot: 28
+      material: GRASS_BLOCK
+      name: '&#9FD9F6生存一区'
+      lore: ['&#B2C3CF世界 &f{world}', '&#C5E9FA继续上一次的冒险', '', '&f点击前往']
+    survival-new:
+      slot: 30
+      material: CHERRY_SAPLING
+      name: '&#C5E9FA生存二区'
+      lore: ['&#B2C3CF世界 &f{world_new}', '&#C5E9FA独立世界，同样回到上次位置', '', '&f点击前往']
+    minigames:
+      slot: 32
+      material: SLIME_BALL
+      name: '&#9FD9F6小游戏区'
+      lore: ['&#B2C3CF主城里的轻松时光', '&#C5E9FA和朋友一起玩一会儿喵~', '', '&f点击前往']

@@ -1,0 +1,73 @@
+name: NekoCore
+version: 1.0.0
+main: land.momo.nekocore.NekoCorePlugin
+api-version: '26.2'
+description: 面向小型 Paper 服务器的开箱即用、配置驱动基础架构。
+author: 羽咲
+softdepend: [PlaceholderAPI, Multiverse-Core, Citizens]
+commands:
+  menu:
+    description: 打开服务器面板
+    usage: /menu
+  coins:
+    description: 查看自己的金币
+    usage: /coins
+  checkin:
+    description: 领取每日签到奖励
+    usage: /checkin
+  sethome:
+    description: 设置当前世界的 Home
+    usage: /sethome
+  home:
+    description: 回到当前或指定世界的 Home
+    usage: /home [worldName]
+  check:
+    description: 查看指定世界的 Home 坐标
+    usage: /check home <worldName>
+  store:
+    description: 打开日常商店
+    usage: /store
+  bag:
+    description: 打开随身背包
+    usage: /bag
+  tpn:
+    description: 请求传送到一位在线玩家身边
+    usage: /tpn <player>
+  'yes':
+    description: 接受传送请求
+    usage: /yes
+  'no':
+    description: 拒绝传送请求
+    usage: /no
+  nekocore:
+    description: NekoCore 管理命令
+    usage: /nekocore
+permissions:
+  nekocore.menu:
+    default: true
+  nekocore.coins:
+    default: true
+  nekocore.checkin:
+    default: true
+  nekocore.home.set:
+    default: true
+  nekocore.home.use:
+    default: true
+  nekocore.home.check:
+    default: true
+  nekocore.admin:
+    default: op
+  nekocore.store:
+    default: true
+  nekocore.bag:
+    default: true
+  nekocore.tpn:
+    default: true
+  nekocore.levelshop:
+    default: true
+  nekocore.perk.auto-checkin:
+    default: false
+  nekocore.perk.colored-chat:
+    default: false
+  nekocore.perk.fast-tpn:
+    default: false

@@ -1,0 +1,40 @@
+config-version: 4
+tips:
+  messages:
+    - '&f输入 &#9FD9F6/spawn &f返回主城，冒险累了就回来歇一会儿。'
+    - '&f输入 &#9FD9F6/menu &f打开服务器面板，挑一个想去的地方吧。'
+    - '&f睡床或用 &#9FD9F6/sethome &f记下小窝，&#9FD9F6/home world &f能回生存一区。'
+    - '&f生存二区的小窝也单独保存，输入 &#9FD9F6/home world_new &f就能回来。'
+    - '&f输入 &#9FD9F6/check home world &f看看小窝的坐标。'
+    - '&f输入 &#9FD9F6/checkin &f领取今天的小礼物，慢慢积攒冒险金币。'
+    - '&f输入 &#9FD9F6/coins &f看看小金库，今天又存了多少呢？'
+    - '&f缺一点材料？输入 &#9FD9F6/store &f逛逛商店，右键买入、左键出售。'
+    - '&f输入 &#9FD9F6/bag &f查看随身物品；在两个生存世界可以取放，大厅只读。'
+    - '&f想和朋友汇合？输入 &#9FD9F6/tpn <玩家名> &f送出一个传送请求。'
+    - '&f收到传送请求时，输入 &#B6E3D0/yes &f让朋友来到你身边。'
+    - '&f暂时不方便汇合？输入 &#EDB9CE/no &f就能婉拒传送请求。'
+gui:
+  items:
+    privacy:
+      name: '&#C5E9FA是否显示 IP 地址'
+      lore: ['&#B2C3CF你的选择：{show_ip}', '&#C5E9FA点击切换个人隐私偏好', '&#B2C3CF仅保存开关，不采集或展示 IP']
+levelshop:
+  titles:
+    mame:
+      name: Mame
+      prefix: '&#B6E3D0[Mame] &r'
+      material: WHEAT_SEEDS
+      price: 1500
+      description: ['&f一颗小小的豆子', '&#B2C3CF上线自动签到', '&#B2C3CF传送冷却 120 秒']
+    momo:
+      name: Momo
+      prefix: '&#EDB9CE[Momo] &r'
+      material: PINK_PETALS
+      price: 4500
+      description: ['&f桃色的冒险时光', '&#B2C3CF自动签到 · 安全聊天颜色', '&#B2C3CF传送冷却 60 秒']
+    sora:
+      name: Sora
+      prefix: '&#CBBFEF[Sora] &r'
+      material: AMETHYST_SHARD
+      price: 12000
+      description: ['&f把旅程写进天空', '&#B2C3CF自动签到 · 安全聊天颜色', '&#B2C3CF传送冷却 30 秒']

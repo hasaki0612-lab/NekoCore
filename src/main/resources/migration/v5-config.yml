@@ -1,0 +1,26 @@
+config-version: 5
+afk-pool:
+  reward:
+    coin-chance: 0.45
+    coin-min: 4
+    coin-max: 8
+gui:
+  items:
+    daily:
+      lore: ['&#B2C3CF即将开放', '&#C5E9FA猫猫正在准备中 ฅ^•ﻌ•^ฅ']
+tips:
+  messages:
+    - '&f输入 &#9FD9F6/spawn &f返回主城，冒险累了就回来歇一会儿。'
+    - '&f输入 &#9FD9F6/menu &f打开服务器面板，挑一个想去的地方吧。'
+    - '&f睡床或用 &#9FD9F6/sethome &f记下小窝，&#9FD9F6/home world &f能回生存一区。'
+    - '&f生存二区的小窝也单独保存，输入 &#9FD9F6/home world_new &f就能回来。'
+    - '&f输入 &#9FD9F6/check home world &f看看小窝的坐标。'
+    - '&f输入 &#9FD9F6/checkin &f领取今天的小礼物，慢慢积攒冒险金币。'
+    - '&f输入 &#9FD9F6/coins &f看看小金库，今天又存了多少呢？'
+    - '&f缺一点材料？输入 &#9FD9F6/store &f逛逛商店，右键买入、左键出售。'
+    - '&f输入 &#9FD9F6/bag &f查看随身物品；在两个生存世界可以取放，大厅只读。'
+    - '&f想和朋友汇合？输入 &#9FD9F6/tpn <玩家名> &f送出一个传送请求。'
+    - '&f收到传送请求时，输入 &#B6E3D0/yes &f让朋友来到你身边。'
+    - '&f暂时不方便汇合？输入 &#EDB9CE/no &f就能婉拒传送请求。'
+    - '&f想休息一下？&#9FD9F6/menu &f里可以去挂机池坐一会儿～'
+    - '&f主城挂机池会慢慢积累一点 EXP，还有机会捞到小金币哦。'
