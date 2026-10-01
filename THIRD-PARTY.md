@@ -5,7 +5,7 @@ NekoCore stands on other people's work. This file is an inventory of what it use
 Two disclaimers up front, because they matter:
 
 - **This is an inventory, not legal advice.** It doesn't replace reading the actual license text of each dependency.
-- **NekoCore itself does not carry a project LICENSE yet.** Third-party licenses do not grant you a license for NekoCore, and nothing here should be read as one.
+- **NekoCore itself is MIT-licensed.** See [LICENSE](LICENSE). Third-party licenses do not replace that, and it does not replace theirs — each component keeps its own terms.
 
 ---
 

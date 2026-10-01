@@ -214,9 +214,9 @@ Shading leaves a second file, `original-NekoCore-1.0.0.jar`, in `target/`. That'
 
 ## Credits and license
 
-Project owner and maintainer: **羽咲**.
-Development and design assistance: **GPT-5.6 Sol (OpenAI)**.
+Project owner and maintainer: **秋山羽咲**.
+Development and design assistance: **GPT-5.6 Sol (OpenAI)** and **DeepSeek-V41-Flash (深度求索)**.
 
-That line records where assistance came from. It does not mean OpenAI maintains, publishes, or endorses this project.
+That line records where assistance came from. It does not mean OpenAI or DeepSeek maintains, publishes, or endorses this project.
 
-The repository does **not** currently carry a license for NekoCore itself. The project owner needs to choose and add one before public distribution. Third-party component licenses do not stand in for a project license, and they don't automatically extend to this project.
+NekoCore is released under the **MIT License** — the full text is in [LICENSE](LICENSE). In short: you're free to use, modify, and redistribute this code, including in closed-source projects, as long as you keep the copyright notice. Third-party component licenses remain separate and don't replace the project license.

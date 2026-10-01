@@ -26,9 +26,15 @@ If you're genuinely unsure which one you've found, **report it privately anyway.
 
 ## How to report
 
-Send the report privately to the project owner through whatever private contact channel they publish for this repository.
+Please report vulnerabilities through **GitHub's private vulnerability reporting** for this repository:
 
-**No email address is invented here.** If the repository doesn't yet list a security contact, that's a gap the owner needs to close before release — in the meantime, use whatever private channel they've made available, and don't open a public issue describing the problem.
+1. Open the repository's **Security** tab.
+2. Click **Report a vulnerability**.
+3. Fill in the form with the details requested below.
+
+This creates a private advisory that only the maintainer can see, so nothing is exposed publicly while the issue is being investigated. If you can't use that form for some reason, contact the maintainer directly through their GitHub profile rather than opening a public issue.
+
+**Please don't open a public issue describing a vulnerability.** A public report gives every server running the affected version a window to be attacked before a fix is available.
 
 ## What to include
 

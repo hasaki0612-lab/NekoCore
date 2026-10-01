@@ -3,7 +3,7 @@ version: 1.0.0
 main: land.momo.nekocore.NekoCorePlugin
 api-version: '26.2'
 description: 面向小型 Paper 服务器的开箱即用、配置驱动基础架构。
-author: 羽咲
+author: 秋山羽咲
 softdepend: [PlaceholderAPI, Multiverse-Core, Citizens]
 commands:
   menu:

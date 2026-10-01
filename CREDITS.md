@@ -4,17 +4,17 @@ NekoCore exists because a small server needed fewer plugins, and then because a 
 
 ## Project
 
-**羽咲** — project owner and maintainer
+**秋山羽咲** — project owner and maintainer
 
 Responsible for the project's direction, what it does and deliberately doesn't do, and every release that goes out.
 
 ## Development and design assistance
 
-**GPT-5.6 Sol (OpenAI)**
+**GPT-5.6 Sol (OpenAI)** and **DeepSeek-V41-Flash (深度求索)**
 
 Contributed to development and design work across the project: shaping how features are configured, reviewing behaviour against the intended design, and helping with the documentation you're reading.
 
-To be explicit about what this credit does and doesn't mean: GPT-5.6 Sol assisted with this project. **OpenAI does not maintain, publish, endorse, or support NekoCore.** This is not an OpenAI project, and nothing here should be read as an official statement from them.
+To be explicit about what this credit does and doesn't mean: these tools assisted with this project. **Neither OpenAI nor DeepSeek maintains, publishes, endorses, or supports NekoCore.** This is not an official project of either company, and nothing here should be read as an official statement from them.
 
 ## Thanks
 

@@ -39,6 +39,6 @@ Older `config.yml` files that lack the newly introduced gates are read with thei
 
 ### Notes
 
-- **No LICENSE is included yet.** The project owner needs to choose one before public distribution. Third-party component licenses do not license NekoCore itself.
+- **Licensed under MIT.** See [LICENSE](LICENSE). You're free to use, modify, and redistribute NekoCore, including in closed-source projects, as long as the copyright notice is kept. Third-party component licenses remain separate.
 - **A security contact has not been published.** See [SECURITY.md](SECURITY.md); the owner should add a channel before release.
 - **Automated tests do not cover every live-server combination.** Entity and UI behaviour, coexistence with Citizens, Multiverse-Core, Multiverse-Inventories and WorldGuard, display ownership alongside other TAB/name tag/chat plugins, TextDisplay cleanup, inventory transactions under interruption, shutdown under load, and upgrades from a real backup all still need hands-on verification on a Paper 26.2 test server. See [VERIFICATION.md](VERIFICATION.md) for the boundary in detail.
