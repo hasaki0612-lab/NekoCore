@@ -31,6 +31,12 @@ If you'd rather understand the machinery underneath, [Configuration](CONFIGURATI
 
 ## Player experience
 
+### I want an icon but do not know its English type
+
+As an admin, hold the item in your main hand and run `/nekocore lookup`: it prints the item's true English name and the `material: NAME` line you want. With an empty hand, search by keyword instead — `/nekocore lookup bread`, or `/nekocore lookup entity phanton` when you are after an entity type. Close spelling is good enough (`bred` finds `BREAD`, `phanton` finds `PHANTOM`), and `minecraft:bread` works as well as `bread`.
+
+Copy that `material:` line into the existing button or product field, rather than creating a second group with the same name. Check, then reload. The command never writes YAML for you, and Chinese names are not searched — it says so instead of guessing at a translation.
+
 ### I want to change the server name
 
 ```yaml
@@ -59,7 +65,7 @@ welcome-title:
   fade-out-ticks: 10
 tips:
   enabled: true
-  interval-seconds: 300
+  interval-seconds: 180
   prefix: '&#9FD9F6tips &f>> '
   messages:
     - '&fWelcome to &#9FD9F6{server}&f! Type &#9FD9F6/menu &fto open the server panel.'
@@ -68,7 +74,7 @@ tips:
 
 Reload when you're done.
 
-**A couple of concepts first.** `ticks` is Minecraft's unit of time, and 20 ticks make one second. So `delay-ticks: 15` means the title appears 0.75 seconds after the player joins, while `stay-ticks: 60` keeps it on screen for three seconds. `interval-seconds` is how far apart the tips are, and the default of 300 works out to five minutes.
+**A couple of concepts first.** `ticks` is Minecraft's unit of time, and 20 ticks make one second. So `delay-ticks: 15` means the title appears 0.75 seconds after the player joins, while `stay-ticks: 60` keeps it on screen for three seconds. `interval-seconds` is how far apart the tips are, and the default of 180 works out to three minutes.
 
 Tips play **one per round**, and after the last message it loops back to the first. A reload restarts that cycle from the top.
 
@@ -197,6 +203,12 @@ chat:
 Any chat plugin already using `%nekocore_display_prefix%` has to have this turned off, otherwise the prefix shows up twice.
 
 ---
+
+### Arrival links and the tasks shortcut
+
+Players type `/tasks` to open the existing Daily Tasks GUI; `nekocore.tasks` is allowed by default. Turning daily tasks off also skips the relevant Tips.
+
+To add your own arrival links, edit `plugins/NekoCore/config.yml` on the **server machine**: fill the needed docs / website / community / discord entries in `join-info.links` with your own real HTTP(S) URLs and leave other entries as `""`. Never copy an address you do not own. Edit player-facing text under `messages.yml → join-info`; run `/nekocore config check`, reload and rejoin to verify. Buttons only open URLs, never run commands. See [JoinInfo configuration](CONFIGURATION.md#join-info--进服个人信息).
 
 ## Server structure
 
@@ -600,7 +612,7 @@ afk-pool:
     pitch: 0.0
   exit-grace-seconds: 2
   reward:
-    interval-seconds: 300
+    interval-seconds: 60
     base-exp: 10
     normal-multiplier: 1.10
     coin-chance: 0.45
@@ -625,7 +637,7 @@ The steps:
 
 **How it actually behaves.** Clicking the menu entry sends the player above the pool. The timer only starts **once they're in the water**, not the moment they land. If they briefly step out — jumping up for air, say — `exit-grace-seconds: 2` gives them two seconds of slack: back in the water within that window and the count continues, longer than that and it resets.
 
-Rewards are handed out on the `interval-seconds` rhythm, every 300 seconds (five minutes) by default: a fixed `base-exp` amount of experience multiplied by `normal-multiplier`, plus coins rolled against `coin-chance`, paying somewhere between `coin-min` and `coin-max`.
+Rewards are handed out on the `interval-seconds` rhythm, every 60 seconds (one minute) by default: a fixed `base-exp` amount of experience multiplied by `normal-multiplier`, plus coins rolled against `coin-chance`, paying somewhere between `coin-min` and `coin-max`.
 
 **Common pitfalls:**
 
@@ -685,7 +697,7 @@ mascot:
   hologram-lines:
     - '&#9FD9F6✦ {server} Mascot ✦'
     - '&#B2C3CFRight-click to say hello'
-  hologram-y-offset: 2.85
+  hologram-y-offset: 2.25
   interaction-window-seconds: 15
   normal-click-limit: 5
   over-limit-chat-cooldown-seconds: 2

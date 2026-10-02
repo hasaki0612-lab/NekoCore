@@ -158,7 +158,7 @@ public record FeatureSettings(LevelShop levelShop, Shop shop, Books books, Bag b
                 || ((Number) value).doubleValue() < min || ((Number) value).doubleValue() > max) bad(p, "数值范围无效");
         return ((Number) value).doubleValue();
     }
-    private static Material material(ConfigurationSection c, String p) {
+    static Material material(ConfigurationSection c, String p) {
         String configured = string(c, p); Material m = Material.matchMaterial(configured);
         if (m == null || !m.isItem()) bad(p, "未知 Material \"" + configured + "\"" + suggestion(configured)); return m;
     }

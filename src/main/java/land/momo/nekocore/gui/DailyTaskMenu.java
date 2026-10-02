@@ -18,7 +18,7 @@ public final class DailyTaskMenu {
     public DailyTaskMenu(NekoCorePlugin plugin) { this.plugin = plugin; }
 
     public void open(Player player) {
-        if (!plugin.permission(player, "nekocore.menu") || !plugin.available(player)) return;
+        if ((!player.hasPermission("nekocore.menu") && !plugin.permission(player, "nekocore.tasks")) || !plugin.available(player)) return;
         if (!plugin.dailyTaskSettings().enabled()) { plugin.messages().send(player, "daily-tasks.disabled"); return; }
         plugin.finish(player, plugin.dailyTasks().view(player.getUniqueId()), view -> render(player, view));
     }

@@ -1,11 +1,30 @@
 # Configuration
 
 [简体中文](../zh-CN/CONFIGURATION.md) | [Back to README](../../README.en.md)
+
 This page is for people who want to **actually understand the configuration**.
 
 [Recipes](RECIPES.md) answers "I want to change X, which lines do I touch?" This page answers "how does this feature actually behave, and therefore what do these fields mean?" Every module explains its in-game behaviour in plain language first, then lists fields.
 
 If you just want a working server quickly, read [Quick Start](QUICKSTART.md) first and come back later.
+
+---
+
+## The 5 things people actually change
+
+Ninety percent of what new owners want is on this list. **After any edit, run `/nekocore config check` and then `/nekocore reload`.**
+
+| I want to change | Field to edit | Details |
+| --- | --- | --- |
+| The server name | `branding.server-name` | See "branding" below |
+| What the main world is called | `survival.world` | See "Worlds and menu entries" below |
+| The check-in reward | `checkin.coins` / `checkin.exp` | See "checkin" below |
+| The price of one store product | `store.products.<id>.price` | See "store" below |
+| Task rewards | `daily-tasks.rewards` | See "daily-tasks" below |
+
+**Every block below opens.** Click a title to unfold that module's behaviour notes and full field table; left closed, the page is a table of contents.
+
+If you only want to know "which lines do I change?", [Recipes](RECIPES.md) gets you there faster than this page.
 
 ---
 
@@ -18,7 +37,7 @@ If you just want a working server quickly, read [Quick Start](QUICKSTART.md) fir
 | `plugins/NekoCore/config.yml` | Server behaviour. Worlds, economy numbers, menu layout, module switches |
 | `plugins/NekoCore/messages.yml` | Every string a player can see |
 
-Both carry a `-version` field (`config-version: 8`, `messages-version: 7`). **Leave those numbers alone.** They tell the plugin how to read your files, and changing them doesn't fix anything.
+Both carry a `-version` field (`config-version: 9`, `messages-version: 8`). **Leave those numbers alone.** They tell the plugin how to read your files, and changing them doesn't fix anything.
 
 ### Editing rules
 
@@ -30,6 +49,12 @@ YAML expresses hierarchy through **spaces**:
 - Quote any value containing `#`, `:`, or colour codes.
 
 ### The workflow after every edit
+
+Startup, check and reload share one validator. Common bad Material / EntityType names and message types are collected together; independent loaders are checked separately. At most 20 issues are displayed with the total count. Complex range/cross-field rules may still report only the first issue in a module; check again after fixing it.
+
+Diagnostics identify file, path, in-game purpose, current value and validation rule. Material means a Minecraft item/block English type; EntityType means a creature type. Source marks supply reliable line numbers; aliases, merge/duplicate keys, special keys or malformed YAML fall back to path/purpose, not guessed lines. Replacements are suggested only when available.
+
+For example, bread's `material: bred` suggests `material: BREAD` in the original field. Admins can hold an item and use `/nekocore lookup`, or search `/nekocore lookup bread`. Replace only bad list entries. Complete opt-in [presets](PRESETS.md) complement the existing detailed field tables.
 
 ```text
 /nekocore config check     ← validates only, applies nothing
@@ -66,7 +91,9 @@ The second is data protection: a trade partway through a two-stage commit across
 
 ---
 
-## branding — your server's name
+<a id="branding--服务器名字"></a>
+<details>
+<summary><b>branding — your server's name</b><br><sub>The server name, shown in TAB, the welcome title, GUI titles, and tips</sub></summary>
 
 ### What it actually does
 
@@ -93,9 +120,13 @@ To verify, `reload` and look at the TAB header and the `/menu` title.
 
 **Restart needed?** No, `reload` is enough.
 
+</details>
+
 ---
 
-## Worlds and menu entries
+<a id="世界与菜单入口"></a>
+<details>
+<summary><b>Worlds and menu entries</b><br><sub>Which world each /menu entry points at; disabled entries hide themselves</sub></summary>
 
 ### What it actually does
 
@@ -218,9 +249,13 @@ The default `survival.command` is `mvtp {player} {world}`, which is a Multiverse
 
 **Additional worlds that rely on command routing** are where Multiverse becomes worth installing.
 
+</details>
+
 ---
 
-## database — where data lives
+<a id="database--数据存储"></a>
+<details>
+<summary><b>database — where data lives</b><br><sub>Which file holds your data, and how often it's flushed</sub></summary>
 
 ### What it actually does
 
@@ -249,9 +284,13 @@ database:
 
 When setting `filename`, don't include path separators. It's a filename inside the plugin directory, nothing more.
 
+</details>
+
 ---
 
-## home — where players live
+<a id="home--小窝"></a>
+<details>
+<summary><b>home — where players live</b><br><sub>Player homes, stored per world; sleeping in a bed records one automatically</sub></summary>
 
 ### What it actually does
 
@@ -294,9 +333,13 @@ home:
 
 **Common mistake:** mismatched capitalisation. `World` and `world` are different worlds to Paper. An empty list, or `enabled: false`, turns the whole feature off.
 
+</details>
+
 ---
 
-## checkin — the daily reward
+<a id="checkin--每日签到"></a>
+<details>
+<summary><b>checkin — the daily reward</b><br><sub>Once-a-day coins and experience; the timezone decides when the day rolls over</sub></summary>
 
 ### What it actually does
 
@@ -365,9 +408,13 @@ checkin:
 
 **When it fails:** negative rewards, an invalid timezone name, or a bad sound name all reject the reload.
 
+</details>
+
 ---
 
-## daily-tasks
+<a id="daily-tasks--每日任务"></a>
+<details>
+<summary><b>daily-tasks</b><br><sub>How many tasks are drawn each day, what they pay, and how the pools are built</sub></summary>
 
 ### What it actually does
 
@@ -425,9 +472,13 @@ The ids in `pools` and `rules` (`simple_gardener`, `normal_harvest`, `hard_marks
 
 **When to change the timezone or pools:** these affect the next rotation. Mid-operation changes are best done **before the rollover, with the server stopped and a backup taken.**
 
+</details>
+
 ---
 
-## store
+<a id="store--商店"></a>
+<details>
+<summary><b>store</b><br><sub>109 products, prices, daily buy/sell limits, and the daily enchantment books</sub></summary>
 
 ### What it actually does
 
@@ -562,9 +613,13 @@ So in the example above, Mending is priced separately at 3600, other max-tier bo
 
 **Rotating the batch:** under normal operation nothing needs doing — it rotates at 04:00 daily. To force it, use `/nekocore store refresh-enchants`, which also resets that period's purchase counts.
 
+</details>
+
 ---
 
-## bag — portable storage
+<a id="bag--随身仓库"></a>
+<details>
+<summary><b>bag — portable storage</b><br><sub>Portable storage: which worlds allow taking and placing, and which levels unlock slots</sub></summary>
 
 ### What it actually does
 
@@ -647,9 +702,13 @@ The `writable-worlds` whitelist exists for exactly this: make survival worlds wr
 
 **This combination isn't covered by the automated tests.** It's worth verifying world switching, death, disconnection, and a full inventory on a test server.
 
+</details>
+
 ---
 
-## tpn — teleport requests
+<a id="tpn--传送请求"></a>
+<details>
+<summary><b>tpn — teleport requests</b><br><sub>How long teleport requests stay valid, and their cooldowns</sub></summary>
 
 ### What it actually does
 
@@ -693,9 +752,13 @@ tpn:
 
 **Restart needed:** no, `reload`.
 
+</details>
+
 ---
 
-## leveling — the level curve
+<a id="leveling--等级曲线"></a>
+<details>
+<summary><b>leveling — the level curve</b><br><sub>How the levelling curve is calculated, and what each next level costs</sub></summary>
 
 ### What it actually does
 
@@ -738,9 +801,13 @@ leveling:
 
 **Note:** changing the curve doesn't make anyone lose or gain levels — it only affects what the next level costs.
 
+</details>
+
 ---
 
-## levelshop — titles
+<a id="levelshop--头衔"></a>
+<details>
+<summary><b>levelshop — titles</b><br><sub>Three titles: prices, prefixes, and the perks they carry</sub></summary>
 
 ### What it actually does
 
@@ -813,9 +880,15 @@ levelshop:
 
 **Keep `description` in sync.** The detail page text like "teleport cooldown 120 seconds" is hand-written; changing `tpn-cooldown-seconds` won't update it, and players will read inconsistent information.
 
+</details>
+
 ---
 
-## tab / nametag / chat / welcome-title — the display layer
+<a id="tab--nametag--chat--welcome-title--显示层"></a>
+<details>
+<summary><b>tab / nametag / chat / welcome-title — the display layer</b><br><sub>TAB, name tags, chat prefix, and the join welcome title</sub></summary>
+
+Public 1.1 keeps a centred `{server}` title, simple whitespace/plain separators and a compact footer, without a subtitle or extra section labels. XYZ, TPS, location prefix, title/level, player name, online count, coins, time and uptime remain. Regions read only the session cache; disable/restore ownership protection remains unchanged. Existing administrator TAB templates survive upgrades.
 
 These are grouped together because their interactions are subtle.
 
@@ -891,13 +964,50 @@ chat:
 
 **If name tags aren't applying:** check the log for a message about the scoreboard team already being managed by another plugin. That means a scoreboard or prefix plugin has claimed the team and NekoCore deliberately stepped back. The answer is the PlaceholderAPI integration, not competing harder.
 
+</details>
+
 ---
 
-## tips / cleanup — atmosphere and housekeeping
+<a id="join-info--进服个人信息"></a>
+<details>
+<summary><b>join-info — personal arrival information</b><br><sub>One personal message, sent to the joining player after a short delay</sub></summary>
+
+JoinInfo is a **chat message sent only to the joining player**, after their cached profile is ready. It is separate from the welcome title, TAB, and holograms.
+
+| Field | Type / default | Notes |
+| --- | --- | --- |
+| `join-info.enabled` | boolean / `true` | Personal chat block |
+| `join-info.delay-ticks` | integer / `30` | Delay after profile preparation; 0–1200 ticks |
+| `join-info.links.docs/website/community/discord` | string / `""` | Administrator-provided HTTP(S) URL |
+
+```yaml
+join-info:
+  enabled: true
+  delay-ticks: 30
+  links:
+    docs: ""
+    website: ""
+    community: ""
+    discord: ""
+```
+
+Edit this on the **server machine**, in `plugins/NekoCore/config.yml`. Put your own real URL into an entry only when you have one; empty entries vanish entirely, without empty buttons or placeholder URLs. Text, button labels and hover text live in `messages.yml` under `join-info`.
+
+The implementation uses Adventure **OPEN_URL**, never a command click. Only HTTP(S) URLs with a host and without credentials or whitespace are accepted. `{player}`, `{server}`, `{playtime}`, `{level}`, and `{coins}` read the prepared cache: no SQLite query or extra GeoIP lookup is made.
+
+Run `/nekocore config check`, then `/nekocore reload`. Pending arrival messages are cancelled on reload, quit, and shutdown; new joins use the new settings. To test, rejoin with a player — reload does not rebroadcast to everyone.
+
+</details>
+
+---
+
+<a id="tips--cleanup--氛围与维护"></a>
+<details>
+<summary><b>tips / cleanup — atmosphere and housekeeping</b><br><sub>Periodic tips, and clearing dropped items off the ground</sub></summary>
 
 ### What these actually do
 
-**Tips** broadcast one message to chat at an interval, cycling through the list and returning to the first after the last. Five minutes by default. After a reload, the cycle restarts from the first message.
+**Tips** broadcast one message to chat at an interval, cycling through the list and returning to the first after the last. Three minutes by default. After a reload, the cycle restarts from the first message.
 
 The default tips cover what new players need: where `/menu` is, that beds work as homes, how to check in, how the store works, how to send a `/tpn` request.
 
@@ -908,7 +1018,7 @@ The default tips cover what new players need: where `/menu` is, that beds work a
 | Field | Type / default | Notes |
 | --- | --- | --- |
 | `tips.enabled` | boolean / `true` | Master switch |
-| `tips.interval-seconds` | integer / `300` | Broadcast interval |
+| `tips.interval-seconds` | integer / `180` | Broadcast interval |
 | `tips.prefix` | string | Prefix in front of each tip |
 | `tips.messages` | string list | The messages; supports `{server}` |
 | `cleanup.enabled` | boolean / `true` | Master switch |
@@ -920,7 +1030,7 @@ The default tips cover what new players need: where `/menu` is, that beds work a
 ```yaml
 tips:
   enabled: true
-  interval-seconds: 300
+  interval-seconds: 180
   prefix: '&#9FD9F6tips &f>> '
   messages:
     - '&fWelcome to &#9FD9F6{server}&f! Type &#9FD9F6/menu &fto open the server panel.'
@@ -947,7 +1057,7 @@ cleanup:
     pitch: 1.6
 ```
 
-**What changed:** `interval-seconds` from 600 to 300 (ten minutes to five).
+**What changed:** `interval-seconds` from 600 to 180 (ten minutes to three).
 
 **When to change it:** if dropped items pile up fast (many mob farms, many players), a shorter interval helps. But **cleaning too often interrupts players mid-chest-sorting** — ten minutes is a comfortable middle ground.
 
@@ -955,7 +1065,15 @@ To clean immediately, use `/nekocore cleanup now` rather than changing the inter
 
 ---
 
-## AFK Pool
+Tips defaults to one looping message every 180 seconds and includes a `/tasks` hint. With `daily-tasks.enabled: false`, `/tasks` hints are skipped without sending extra messages.
+
+</details>
+
+---
+
+<a id="afk-pool--挂机池"></a>
+<details>
+<summary><b>AFK Pool</b><br><sub>The AFK pool: where it is, how often it pays, and how much</sub></summary>
 
 ### What it actually does
 
@@ -1003,7 +1121,8 @@ This multiplier **applies to AFK pool experience only**, never to check-ins, tas
 | `afk-pool.teleport.x/y/z` | number | Destination coordinates |
 | `afk-pool.teleport.yaw/pitch` | number | Facing on arrival |
 | `afk-pool.exit-grace-seconds` | integer / `2` | Grace period out of water |
-| `afk-pool.reward.interval-seconds` | integer / `300` | Reward interval |
+| `afk-pool.reward.interval-seconds` | integer / `60` | Reward interval |
+| `afk-pool.end-message-enabled` | boolean / `true` | Personal duration message at normal session end |
 | `afk-pool.reward.base-exp` | integer / `10` | Base experience per payout |
 | `afk-pool.reward.normal-multiplier` | number / `1.10` | Base multiplier |
 | `afk-pool.reward.coin-chance` | 0–1 / `0.45` | Probability of a coin payout |
@@ -1028,7 +1147,7 @@ afk-pool:
     pitch: 0.0
   exit-grace-seconds: 2
   reward:
-    interval-seconds: 300
+    interval-seconds: 60
     base-exp: 10
     normal-multiplier: 1.10
     coin-chance: 0.45
@@ -1053,15 +1172,27 @@ afk-pool:
 
 ### About the reward pacing
 
-The default `interval-seconds: 300` means one payout every five minutes: 10 base experience × 1.10 ≈ 11, plus coins 1–4 with a 45% chance.
+The default `interval-seconds: 60` means one reward attempt every minute: 10 base experience × 1.10 ≈ 11, plus coins 1–4 with a 45% chance.
 
-**Doing the arithmetic:** about an hour of AFK earns roughly 132 experience and about 67 coins. Compare that with 100 coins from a single check-in — AFK income exists, but **it isn't more efficient than actually playing**.
+**Doing the arithmetic:** an uninterrupted hour permits about 60 attempts: roughly 660 experience and 67.5 coins in expectation at these defaults. Coin rewards are random; interrupted sessions may earn less. Compare these rates with your own gameplay economy before enabling AFK.
 
 That balance is deliberate. If AFK paid better than adventuring, players would AFK instead of play. Before changing it, work out the ratio between your AFK income and your normal gameplay income.
 
 ---
 
-## weekly-coin-leaderboard
+### Reward cadence is not session detection
+
+60 seconds controls **reward attempts only**. Water eligibility is still checked every 5 ticks, exit grace still defaults to 2 seconds, and reward pools, probability and multipliers are unchanged. `afk-pool.reward.interval-seconds` must be an integer from 1 through 31536000; an invalid value logs a warning and safely falls back to 60.
+
+Returning to water within grace continues the same session without an end message. A normal end (leaving, changing world, or death) sends the online player exactly one `messages.yml → afk-pool.end-message`. `{duration}` is formatted as `42秒`, `3分18秒`, or `1小时12分05秒`, without milliseconds. Duration starts at session entry and includes grace within that session. Quit, reload, disable and shutdown clean up silently. Set `end-message-enabled: false` to suppress this message. AFK remains disabled by default.
+
+</details>
+
+---
+
+<a id="weekly-coin-leaderboard--金币周榜"></a>
+<details>
+<summary><b>weekly-coin-leaderboard</b><br><sub>Where the weekly coin board hangs, and how often it refreshes</sub></summary>
 
 ### What it actually does
 
@@ -1086,6 +1217,7 @@ So you **can safely leave `enabled: true` to start collecting data** and fill in
 | `weekly-coin-leaderboard.world` | world name / `world` | Target world |
 | `weekly-coin-leaderboard.x/y/z` | number | Coordinates |
 | `weekly-coin-leaderboard.yaw` | number / `0.0` | Facing |
+| `weekly-coin-leaderboard.billboard` | enum / `FIXED` | `FIXED` respects yaw; `CENTER` follows the viewer |
 | `weekly-coin-leaderboard.refresh-seconds` | integer / `30` | Refresh interval |
 
 The board's **text** lives in `messages.yml` under `weekly-coins`, with separate colours for first, second, and third place.
@@ -1101,6 +1233,7 @@ weekly-coin-leaderboard:
   y: 70.0
   z: -5.5
   yaw: 180.0
+  billboard: FIXED
   refresh-seconds: 30
 ```
 
@@ -1116,7 +1249,15 @@ weekly-coin-leaderboard:
 
 ---
 
-## mascot
+The default `FIXED` billboard makes `yaw` determine the board's orientation. `CENTER` faces viewers instead, so it is not a fixed-yaw test. Refresh reuses the existing TextDisplay; reload removes the owned display before rebuilding it, without leaving duplicates. PDC cleanup, timezone, Top N and weekly income accounting remain intact; this is not a global FIXED change.
+
+</details>
+
+---
+
+<a id="mascot--吉祥物"></a>
+<details>
+<summary><b>mascot</b><br><sub>Citizens NPC interaction: right-click replies, particles, hologram text</sub></summary>
 
 ### What it actually does
 
@@ -1148,7 +1289,7 @@ So the arrangement is: Citizens supplies the body, NekoCore supplies the persona
 | `mascot.npc-id` | integer / `-1` | The Citizens NPC's id |
 | `mascot.hologram-enabled` | boolean / `true` | Hologram above the NPC |
 | `mascot.hologram-lines` | string list | Hologram text; supports `{server}` |
-| `mascot.hologram-y-offset` | number / `2.85` | Vertical offset of the hologram |
+| `mascot.hologram-y-offset` | number / `2.25` | Vertical offset of the hologram |
 | `mascot.interaction-window-seconds` | integer / `15` | Length of the click-counting window |
 | `mascot.normal-click-limit` | integer / `5` | Normal responses allowed within the window |
 | `mascot.over-limit-chat-cooldown-seconds` | integer / `2` | Chat cooldown once over the limit |
@@ -1167,7 +1308,7 @@ mascot:
   hologram-lines:
     - '&#9FD9F6✦ {server} Mascot ✦'
     - '&#B2C3CF右键和我打招呼'
-  hologram-y-offset: 2.85
+  hologram-y-offset: 2.25
   interaction-window-seconds: 15
   normal-click-limit: 5
   over-limit-chat-cooldown-seconds: 2
@@ -1183,13 +1324,21 @@ mascot:
 
 **Restart needed:** **yes, a full restart** — Citizens is a new plugin, and reload can't cover that.
 
-**Adjusting `hologram-y-offset`:** how far above the NPC's head the hologram sits, in blocks. The 2.85 default suits a normal player-model NPC. Nudge it if yours is unusually tall or short.
+**Adjusting `hologram-y-offset`:** the height of the whole hologram relative to the NPC's location, in blocks. Start with 2.25 and adjust after viewing your own NPC; do not change line spacing to fix overall placement.
 
 **Interpreting the window:** `interaction-window-seconds` is a **rolling window, not a cooldown**. Someone clicking once every three seconds stays under the limit forever. It's only rapid clicking that trips it.
 
 ---
 
-## location-prefix — regions (GeoIP)
+`hologram-y-offset` moves the entire text block (default reduced from 2.85 to 2.25); it does not change line spacing. It is relative to the NPC's location, not an extra offset above its head. The NPC's position, name and skin remain untouched. Mascot still uses `CENTER`; disabled Mascot or missing Citizens registers no Mascot listener or refresh task.
+
+</details>
+
+---
+
+<a id="location-prefix--网络地区geoip"></a>
+<details>
+<summary><b>location-prefix — regions (GeoIP)</b><br><sub>Player region display (needs a GeoIP data file)</sub></summary>
 
 ### What it actually does
 
@@ -1243,9 +1392,13 @@ tab:
 
 The full install procedure, privacy model, and troubleshooting steps are in [GeoIP](GEOIP.md).
 
+</details>
+
 ---
 
-## holograms — global display settings
+<a id="holograms--全息字全局设置"></a>
+<details>
+<summary><b>holograms — global display settings</b><br><sub>Hologram text width and shadow</sub></summary>
 
 ### What it actually does
 
@@ -1272,9 +1425,13 @@ holograms:
 
 **Restart needed:** no, `reload`.
 
+</details>
+
 ---
 
-## advanced — the debugging switch
+<a id="advanced--排障开关"></a>
+<details>
+<summary><b>advanced — the debugging switch</b><br><sub>The debugging switch for troubleshooting; leave it off normally</sub></summary>
 
 ### Fields
 
@@ -1298,6 +1455,8 @@ With `debug` on, those components log the full exception, which makes it clear w
 **⚠ Turn it back off when you're done.**
 
 **Restart needed:** no, `reload`.
+
+</details>
 
 ---
 

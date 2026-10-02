@@ -22,6 +22,6 @@ jobs:
       - name: Upload plugin JAR
         uses: actions/upload-artifact@v4
         with:
-          name: NekoCore-1.0.0
-          path: target/NekoCore-1.0.0.jar
+          name: NekoCore-1.2.0
+          path: target/NekoCore-1.2.0.jar
           if-no-files-found: error

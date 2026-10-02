@@ -252,7 +252,7 @@ When a trade's state can't be determined — say the player's inventory matches 
 
 **The key point: this player is not banned and can keep playing normally.** All they lose, until the problem is resolved, is the ability to start any NekoCore trade or open the store and Bag. That's deliberate — when something goes wrong, it's better for one feature to be temporarily unavailable than to replay an operation whose outcome is unknown.
 
-The source comments state the principle plainly: ambiguous storage failures involving third-party plugins get **quarantined, never replayed**; don't guess, don't refund, don't hand out items, don't overwrite Multiverse's per-world inventories.
+The source comments state the principle plainly: an ambiguous storage failure involving a third-party plugin is **quarantined, never replayed** — no guessing, no refunds, no re-sent items, and no overwriting Multiverse's per-world inventories.
 
 **What to do if it happens:** this is a situation that needs human judgement. Preserve the scene, compare the player's inventory, coin balance, store quota, and the trade logs, then decide how to handle it. **Do not** try to "make it go away" by dropping tables or editing data.
 

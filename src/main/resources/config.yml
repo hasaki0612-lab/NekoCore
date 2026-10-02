@@ -1,5 +1,5 @@
-# NekoCore Public 1.0.0 · 面向小型 Paper 服务器的开箱即用配置
-config-version: 8
+# NekoCore Public 1.2.0 · 面向小型 Paper 服务器的开箱即用配置
+config-version: 9
 branding:
   # 支持 {server} 的玩家可见文案会使用这个名称；修改后执行 /nekocore reload。
   server-name: "My Server"
@@ -50,8 +50,11 @@ afk-pool:
     yaw: 0.0
     pitch: 0.0
   exit-grace-seconds: 2
+  # 只在真实 session 正式结束时发送；退出、重载和停服不发送。
+  end-message-enabled: true
   reward:
-    interval-seconds: 300
+    # 奖励尝试周期；不改变入水/离水判定。非法值使用 60 秒并输出提示。
+    interval-seconds: 60
     base-exp: 10
     normal-multiplier: 1.10
     coin-chance: 0.45
@@ -79,6 +82,15 @@ holograms:
   # 只管理带 NekoCore 标记的 TextDisplay；不会处理其他插件实体。
   line-width: 240
   shadowed: true
+join-info:
+  enabled: true
+  delay-ticks: 30
+  # 仅接受 http/https。空 URL 自动隐藏；不会创建空按钮或假链接。
+  links:
+    docs: ''
+    website: ''
+    community: ''
+    discord: ''
 weekly-coin-leaderboard:
   enabled: false
   # 榜单坐标尚未确定时保持 false；插件会记录一次 WARNING，但仍持续统计周收入。
@@ -88,6 +100,8 @@ weekly-coin-leaderboard:
   y: 0.0
   z: 0.0
   yaw: 0.0
+  # FIXED 尊重 yaw；CENTER 始终面向观察者。仅影响本榜单。
+  billboard: FIXED
   refresh-seconds: 30
 mascot:
   enabled: false
@@ -97,7 +111,8 @@ mascot:
   hologram-lines:
     - '&#9FD9F6✦ {server} Mascot ✦'
     - '&#B2C3CF右键和我打招呼'
-  hologram-y-offset: 2.85
+  # 整块文字相对 NPC 的高度，不是行间距。
+  hologram-y-offset: 2.25
   interaction-window-seconds: 15
   normal-click-limit: 5
   over-limit-chat-cooldown-seconds: 2
@@ -121,7 +136,7 @@ cleanup:
     pitch: 1.6
 tips:
   enabled: true
-  interval-seconds: 300
+  interval-seconds: 180
   prefix: '&#9FD9F6tips &f>> '
   # 每轮只播报一条，末尾后回到第一条。重载后从第一条重新计时。
   messages:
@@ -135,7 +150,7 @@ tips:
     - '&f想和朋友汇合？输入 &#9FD9F6/tpn <玩家名> &f送出一个传送请求。'
     - '&f收到传送请求时，输入 &#B6E3D0/yes &f让朋友来到你身边。'
     - '&f暂时不方便汇合？输入 &#EDB9CE/no &f就能婉拒传送请求。'
-    - '&f打开 &#9FD9F6/menu &f看看今日任务，简单、普通、困难各有三份小目标。'
+    - '&f输入 &#9FD9F6/tasks &f快速打开今天的每日任务，简单、普通、困难各有三份小目标。'
 checkin:
   enabled: true
   # 每个自然日一次，不是每隔 24 小时；在线跨日无需重进。

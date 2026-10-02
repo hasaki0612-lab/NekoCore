@@ -16,7 +16,7 @@
 | --- | --- |
 | [Paper](https://papermc.io/downloads/paper/) | 26.2 |
 | [Java](https://docs.oracle.com/en/java/javase/25/install/) | 25 |
-| NekoCore | `NekoCore-1.0.0.jar` |
+| NekoCore | `NekoCore-1.2.0.jar` |
 
 Java 装完用 `java -version` 确认第一行是 25。Paper 首次启动的 EULA 流程见快速开始。
 
@@ -24,16 +24,16 @@ Java 装完用 `java -version` 确认第一行是 25。Paper 首次启动的 EUL
 
 1. **先让 Paper 自己跑一次。** 不装任何插件，启动到出现 `Done`，然后 `stop`。这样服务器的基础文件、世界、`server.properties` 都由 Paper 自己生成好，是最干净的状态。
 
-2. **停服状态**下，把 `NekoCore-1.0.0.jar` 放进 `plugins/`。
+2. **停服状态**下，把 `NekoCore-1.2.0.jar` 放进 `plugins/`。
 
-   **不要**放 `original-NekoCore-1.0.0.jar`（那是 shade 打包前的半成品）。如果你还想装 PlaceholderAPI、Citizens 或 Multiverse-Core，现在一起放进去，顺序无所谓——但**不装也完全没问题**。
+   **不要**放 `original-NekoCore-1.2.0.jar`（那是 shade 打包前的半成品）。如果你还想装 PlaceholderAPI、Citizens 或 Multiverse-Core，现在一起放进去，顺序无所谓——但**不装也完全没问题**。
 
 3. **启动。** 首次启动时 NekoCore 会：
    - 在 `plugins/NekoCore/` 生成 `config.yml` 和 `messages.yml`；
    - 创建 `nekocore.db` 并执行 V1→V5 迁移建表；
    - 打印一段简短的状态摘要。
 
-   日志里应该能找到一行包含 `NekoCore 1.0.0 ready` 的摘要。**日志被有意压缩过**，不会刷满屏幕；没有 `ERROR` 就是正常的。
+   日志里应该能找到一行包含 `NekoCore 1.2.0 ready` 的摘要。**日志被有意压缩过**，不会刷满屏幕；没有 `ERROR` 就是正常的。
 
 4. **停服**，编辑 `plugins/NekoCore/config.yml`。至少改 `branding.server-name`；主世界不叫 `world` 的话，`survival.world` 也要改。
 
@@ -57,9 +57,27 @@ NekoCore 首次启动只需要 Paper 和 Java。缺什么就安静地关掉什�
 
 ---
 
+## Public 1.1.0 → 1.2.0
+
+完整停服、备份旧 JAR 和整个插件数据目录（数据库含 WAL/SHM、世界玩家背包），只替换 JAR。保留 config.yml / messages.yml / 数据库；本次仍是 config 9、messages 8、schema 5，没有新增 YAML / 数据库迁移。缺少的 lookup 文案在内存中补默认，不重写旧文件。预设只在缺失时复制，不自动应用，不覆盖已有预设。普通重启不重复首次配置指引。详见[预设](PRESETS.md)。
+
+下面保留 1.0.0 → 1.1.0 的历史迁移说明；从 1.0.0 直升 1.2.0 仍使用这套原有迁移机制与备份名。
+
+## Public 1.0.0 → 1.1.0
+
+在**服务器机器**操作，先完整停服并备份旧 JAR、整个 `plugins/NekoCore/` 和世界玩家背包数据；存在 WAL/SHM 时与数据库一起备份。然后移走旧 JAR，只放 `NekoCore-1.2.0.jar`，**不要覆盖或删除自己的 config.yml / messages.yml / nekocore.db**。
+
+首次启动会合并缺失字段，并仅将与 Public 1.0 默认快照完全相同的字段更新为新默认；管理员不同的 server-name、商品、任务规则、TAB、Tips、世界、槽位、文字、links、奖励值都保留。原 YAML 逐字节备份为 `*.yml.pre-public-1.1.0-<随机标识>.bak`。新增 JoinInfo 默认开启但四个链接为空；AFK、Mascot、排行榜的默认关闭状态不变。
+
+内部版本变化：config **8 → 9**，messages **7 → 8**，因为增加 JoinInfo、billboard、AFK 结束提示等字段，需要现有迁移系统补全；SQLite schema **仍为 5**，V1→V5 保留，不新增 V6。旧迁移快照仍全部存在，但其中旧部署标题和坐标已通用化；来自更早私有配置的这些值可能按自定义值保留，请管理员自行审核，插件不会擅自覆盖未知部署设置。
+
+启动后运行 `/nekocore config check`、`/nekocore status` 和 `/nekocore doctor`。用玩家检查 `/tasks`、个人 JoinInfo 和已有数据；开启了对应模块的测试服还应检查排行榜 yaw、Mascot 高度、AFK 宽限及结束消息。默认未自定义的 Tips 改为 180 秒、AFK 奖励尝试改为 60 秒。回滚时恢复**同一份停服备份中的 JAR、YAML、数据库和背包数据**，不要只换旧 JAR。
+
+---
+
 ## 从 NekoCore 1.4.0 / 旧版本升级
 
-Public 1.0.0 的代码基线就是完整的 NekoCore 1.4.0，**没有推倒重写**。所以升级本身是低风险的——但它仍然涉及数据库迁移，该做的备份一步都不能省。
+Public 1.0.0 最初基于完整的私有 1.4.0；Public 1.1.0 在该公版仓库上增量同步 1.4.1～1.4.4 的通用能力，没有推倒重写。两条版本线独立，私有 1.4.4 不等于 Public 1.1.0。旧版本升级仍须测试备份和数据恢复，不应仅凭共同基线就判断为低风险。
 
 ### 步骤
 
@@ -78,12 +96,12 @@ Public 1.0.0 的代码基线就是完整的 NekoCore 1.4.0，**没有推倒重�
 
    只复制 `.db` 可能拿到一个不完整的时点——最近提交的事务可能还在 WAL 文件里。**绝对不要在服务器运行时只复制 `.db`。**
 
-4. **从 `plugins/` 移走旧 JAR**，只放入 `NekoCore-1.0.0.jar`。**保留现有的 `plugins/NekoCore/` 目录**——配置和数据库都在里面，这正是你要延续的东西。
+4. **从 `plugins/` 移走旧 JAR**，只放入 `NekoCore-1.2.0.jar`。**保留现有的 `plugins/NekoCore/` 目录**——配置和数据库都在里面，这正是你要延续的东西。
 
 5. **完整启动**，观察日志：
    - 配置升级的备份信息；
    - V1→V5 的迁移记录（旧库只执行缺失的版本）；
-   - `NekoCore 1.0.0 ready`。
+   - `NekoCore 1.2.0 ready`。
 
 6. **运行 `/nekocore status`**，确认 schema 是 5、各模块状态正常。
 
@@ -105,12 +123,12 @@ Public 1.0.0 的代码基线就是完整的 NekoCore 1.4.0，**没有推倒重�
 
 ### 关于版本号
 
-**Public 版本号 1.0.0 不会重置内部版本。** 也就是说：
+**Public 版本号 1.1.0 不会重置内部版本。** 也就是说：
 
 | 内部版本 | 值 |
 | --- | --- |
-| `config-version` | 8 |
-| `messages-version` | 7 |
+| `config-version` | 9 |
+| `messages-version` | 8 |
 | SQLite `user_version`（schema） | 5 |
 | 迁移 | V1、V2、V3、V4、V5 |
 
@@ -172,7 +190,7 @@ Public 1.0.0 的代码基线就是完整的 NekoCore 1.4.0，**没有推倒重�
 ## 卸载
 
 1. **停服**，等进程完全退出。
-2. 把 `plugins/NekoCore-1.0.0.jar` 从 `plugins/` 移走。
+2. 把 `plugins/NekoCore-1.2.0.jar` 从 `plugins/` 移走。
 3. **`plugins/NekoCore/` 目录建议保留。** 它在插件被移除后不会造成任何影响，但如果你想以后回来，配置和玩家数据都还在。
 
 ### 移除之后会发生什么

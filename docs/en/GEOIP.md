@@ -95,7 +95,7 @@ The prefix format itself is editable through `location-prefix-format` in `messag
 
 `tab.show-location-prefix` is an **independent global switch** that decides whether TAB shows regions at all. It is a separate mechanism from a player's own privacy toggle.
 
-### `cache-session: false` does not mean "query it live every time"
+### ⚠ `cache-session: false` does not mean "query it live every time"
 
 This one needs its own section, because it is counter-intuitive and the consequences are visible server-wide.
 
@@ -150,7 +150,7 @@ With it off, **their own region is not displayed**. That is a player-level choic
 - **MaxMind's licence terms.** Use of GeoLite2 data is governed by their terms, including requirements around attribution and redistribution. Read them properly when you register.
 - **Telling your players.** One sentence — "TAB shows a rough region" — is better than letting them find out on their own.
 
-### What not to publish
+### ⚠ What not to publish
 
 | Do not publish | Why |
 | --- | --- |

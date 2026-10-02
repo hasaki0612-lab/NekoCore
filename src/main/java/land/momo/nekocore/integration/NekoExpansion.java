@@ -12,7 +12,7 @@ public final class NekoExpansion extends PlaceholderExpansion {
     public NekoExpansion(NekoCorePlugin plugin) { this.plugin = plugin; }
     @Override public String getIdentifier() { return "nekocore"; }
     @Override public String getAuthor() { return "羽咲"; }
-    @Override public String getVersion() { return "1.0.0"; }
+    @Override public String getVersion() { return "1.2.0"; }
     @Override public boolean persist() { return true; }
     @Override public String onRequest(OfflinePlayer player, String params) {
         if (player == null) return "";

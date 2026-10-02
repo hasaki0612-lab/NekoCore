@@ -143,7 +143,7 @@ public record DailyTaskSettings(boolean enabled, ZoneId zone,
         if (result.isEmpty()) bad(path, "列表不能为空");
         return result;
     }
-    private static Material material(ConfigurationSection c, String path) {
+    static Material material(ConfigurationSection c, String path) {
         Material material = Material.matchMaterial(string(c, path));
         // Material#isItem consults Paper's live registry in 26.2. Configuration
         // parsing also runs in migration tools and unit tests where that registry

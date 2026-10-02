@@ -2,6 +2,7 @@ package land.momo.nekocore.config;
 
 import land.momo.nekocore.model.LevelCurve;
 import org.bukkit.Material;
+import org.bukkit.entity.Display;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
@@ -11,8 +12,11 @@ import java.time.ZoneId;
 public record Settings(String serverName, String databaseFile, int saveInterval, String survivalWorld, String survivalCommand,
                        LevelCurve curve, Cleanup cleanup, Menu menu, Features features, BedAutoSet bedAutoSet,
                        LocationPrefix locationPrefix, AfkPool afkPool, GlobalTab tab, WelcomeTitle welcomeTitle,
-                       Holograms holograms, WeeklyLeaderboard weeklyLeaderboard, Mascot mascot, boolean debug) {
+                       Holograms holograms, WeeklyLeaderboard weeklyLeaderboard, Mascot mascot, boolean debug, JoinInfo joinInfo) {
     public static Settings load(File file) throws Exception {
+        return load(file, ignored -> {});
+    }
+    public static Settings load(File file, java.util.function.Consumer<String> warning) throws Exception {
         YamlConfiguration yaml = new YamlConfiguration();
         yaml.load(file); // loadConfiguration silently swallows malformed YAML; fail atomically instead.
         String serverName = optionalString(yaml, "branding.server-name", "My Server");
@@ -84,7 +88,7 @@ public record Settings(String serverName, String databaseFile, int saveInterval,
         int coinMin = integer(yaml, "afk-pool.reward.coin-min", 0, 1_000_000);
         int coinMax = integer(yaml, "afk-pool.reward.coin-max", 0, 1_000_000);
         require(coinMax >= coinMin, "afk-pool.reward.coin-max 不可小于 coin-min");
-        AfkReward afkReward = new AfkReward(integer(yaml, "afk-pool.reward.interval-seconds", 1, 31_536_000),
+        AfkReward afkReward = new AfkReward(afkRewardInterval(yaml, warning),
                 number(yaml, "afk-pool.reward.base-exp"), ratio(yaml, "afk-pool.reward.normal-multiplier", 0, 100),
                 ratio(yaml, "afk-pool.reward.coin-chance", 0, 1), coinMin, coinMax);
         require(afkReward.baseExp() >= 0, "afk-pool.reward.base-exp 不可为负数");
@@ -93,7 +97,8 @@ public record Settings(String serverName, String databaseFile, int saveInterval,
                 integer(yaml, "afk-pool.title.stay-ticks", 20, 60), integer(yaml, "afk-pool.title.fade-out-ticks", 0, 20));
         boolean afkConfigured = optionalBool(yaml, "afk-pool.position-configured", true);
         AfkPool afkPool = new AfkPool(bool(yaml, "afk-pool.enabled") && afkConfigured, afkTeleport,
-                integer(yaml, "afk-pool.exit-grace-seconds", 0, 60), afkReward, afkTitle);
+                integer(yaml, "afk-pool.exit-grace-seconds", 0, 60), afkReward, afkTitle,
+                optionalBool(yaml, "afk-pool.end-message-enabled", true));
         GlobalTab tab = new GlobalTab(bool(yaml, "tab.enabled"), bool(yaml, "tab.show-location-prefix"),
                 integer(yaml, "tab.refresh-seconds", 1, 60));
         WelcomeTitle welcome = new WelcomeTitle(bool(yaml, "welcome-title.enabled"),
@@ -106,7 +111,8 @@ public record Settings(String serverName, String databaseFile, int saveInterval,
                 bool(yaml, "weekly-coin-leaderboard.position-configured"), boardWorld,
                 finite(yaml, "weekly-coin-leaderboard.x"), finite(yaml, "weekly-coin-leaderboard.y"),
                 finite(yaml, "weekly-coin-leaderboard.z"), decimal(yaml, "weekly-coin-leaderboard.yaw", -360, 360),
-                integer(yaml, "weekly-coin-leaderboard.refresh-seconds", 10, 3600));
+                integer(yaml, "weekly-coin-leaderboard.refresh-seconds", 10, 3600),
+                billboard(yaml, "weekly-coin-leaderboard.billboard"));
         String normalParticle = string(yaml, "mascot.normal-particle"), overParticle = string(yaml, "mascot.over-limit-particle");
         require(normalParticle.matches("[a-z0-9_.-]+:[a-z0-9_./-]+"), "mascot.normal-particle 无效");
         require(overParticle.matches("[a-z0-9_.-]+:[a-z0-9_./-]+"), "mascot.over-limit-particle 无效");
@@ -123,16 +129,49 @@ public record Settings(String serverName, String databaseFile, int saveInterval,
                 integer(yaml, "mascot.over-limit-chat-cooldown-seconds", 1, 60), normalParticle,
                 integer(yaml, "mascot.normal-particle-count", 0, 100), overParticle,
                 integer(yaml, "mascot.over-limit-particle-count", 0, 100));
+        List<JoinInfoEntry> links = new ArrayList<>();
+        for (String id : List.of("docs", "website", "community", "discord")) {
+            String url = optionalString(yaml, "join-info.links." + id, "");
+            require(url.isEmpty() || safeUrl(url), "join-info.links." + id + " 值 \"" + url + "\" 必须为空或有效的 http/https URL（不可含命令、空格或用户凭据）");
+            links.add(new JoinInfoEntry(id, url));
+        }
+        JoinInfo joinInfo = new JoinInfo(optionalBool(yaml, "join-info.enabled", true),
+                yaml.contains("join-info.delay-ticks") ? integer(yaml, "join-info.delay-ticks", 0, 1200) : 30,
+                List.copyOf(links));
         return new Settings(serverName, database, saveInterval, world, command, curve, cleanup, menu,
                 new Features(optionalBool(yaml, "survival.enabled", true), optionalBool(yaml, "survival-new.enabled", true),
                         newWorld, newCommand, optionalBool(yaml, "minigames.enabled", true), games, tips, checkin, chat),
                 bed, locationPrefix, afkPool, tab,
-                welcome, holograms, board, mascot, optionalBool(yaml, "advanced.debug", false));
+                welcome, holograms, board, mascot, optionalBool(yaml, "advanced.debug", false), joinInfo);
     }
 
     static void validateSurvivalCommand(String command, String path) {
         require(command.contains("{player}") && command.contains("{world}") && !command.stripLeading().startsWith("/")
                 && !command.contains("\n") && !command.contains("\r"), path + " 需包含 {player} 和 {world}，且不要带开头的 / 或换行");
+    }
+
+    static int afkRewardInterval(YamlConfiguration yaml, java.util.function.Consumer<String> warning) {
+        Object configured = yaml.get("afk-pool.reward.interval-seconds");
+        if ((configured instanceof Integer || configured instanceof Long)
+                && ((Number) configured).longValue() >= 1 && ((Number) configured).longValue() <= 31_536_000)
+            return ((Number) configured).intValue();
+        warning.accept("afk-pool.reward.interval-seconds 值 \"" + configured + "\" 无效；应为 1..31536000 的整数，本次使用安全默认 60 秒。");
+        return 60;
+    }
+
+    static boolean safeUrl(String value) {
+        try {
+            var uri = java.net.URI.create(value);
+            return ("https".equalsIgnoreCase(uri.getScheme()) || "http".equalsIgnoreCase(uri.getScheme()))
+                    && uri.getHost() != null && !uri.getHost().isBlank() && uri.getRawUserInfo() == null
+                    && value.chars().noneMatch(c -> Character.isWhitespace(c) || Character.isISOControl(c));
+        } catch (IllegalArgumentException error) { return false; }
+    }
+
+    private static Display.Billboard billboard(YamlConfiguration yaml, String path) {
+        String value = optionalString(yaml, path, "FIXED");
+        require(List.of("FIXED", "CENTER").contains(value), path + " 值 \"" + value + "\" 必须为 FIXED 或 CENTER");
+        return Display.Billboard.valueOf(value);
     }
 
     private static String string(YamlConfiguration yaml, String path) {
@@ -170,14 +209,14 @@ public record Settings(String serverName, String databaseFile, int saveInterval,
         require(yaml.get(path) instanceof Number, path + " 必须是数字");
         double n = yaml.getDouble(path); require(Double.isFinite(n) && n >= min && n <= max, path + " 范围无效"); return n;
     }
-    private static Material material(YamlConfiguration yaml, String path) {
+    static Material material(YamlConfiguration yaml, String path) {
         String configured = string(yaml, path);
         Material material = Material.matchMaterial(configured);
         if (material == null || !material.isItem() || material.isAir())
             throw new IllegalArgumentException(path + " 未知 Material \"" + configured + "\"" + suggestion(configured));
         return material;
     }
-    private static String suggestion(String configured) {
+    static String suggestion(String configured) {
         String needle = configured.toUpperCase(Locale.ROOT);
         Material[] values = Material.values();
         if (values == null) return ""; // Unit-test registry boundary.
@@ -213,7 +252,7 @@ public record Settings(String serverName, String databaseFile, int saveInterval,
     }
     public record LocationPrefix(boolean enabled, String databaseFile, boolean cacheSession,
                                  boolean showChinaProvince, boolean showForeignCountry, boolean hideUnknown) {}
-    public record AfkPool(boolean enabled, Destination teleport, int exitGrace, AfkReward reward, AfkTitle title) {}
+    public record AfkPool(boolean enabled, Destination teleport, int exitGrace, AfkReward reward, AfkTitle title, boolean endMessageEnabled) {}
     public record AfkReward(int interval, long baseExp, double normalMultiplier, double coinChance,
                             int coinMin, int coinMax) {}
     public record AfkTitle(boolean enabled, boolean hideWhileInventoryOpen, int stayTicks, int fadeOutTicks) {}
@@ -221,7 +260,11 @@ public record Settings(String serverName, String databaseFile, int saveInterval,
     public record WelcomeTitle(boolean enabled, int delayTicks, int fadeInTicks, int stayTicks, int fadeOutTicks) {}
     public record Holograms(int lineWidth, boolean shadowed) {}
     public record WeeklyLeaderboard(boolean enabled, boolean positionConfigured, String world, double x, double y,
-                                    double z, float yaw, int refreshSeconds) {}
+                                    double z, float yaw, int refreshSeconds, Display.Billboard billboard) {}
+    public record JoinInfo(boolean enabled, int delayTicks, List<JoinInfoEntry> links) {
+        public JoinInfo { links = List.copyOf(links); }
+    }
+    public record JoinInfoEntry(String id, String url) {}
     public record Mascot(boolean enabled, int npcId, boolean hologramEnabled, List<String> hologramLines, float hologramYOffset,
                          int windowSeconds, int normalClickLimit, int overLimitCooldownSeconds,
                          String normalParticle, int normalParticleCount, String overLimitParticle,

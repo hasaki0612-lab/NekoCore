@@ -38,7 +38,7 @@ class DestinationServiceTest {
         var plugin = mock(NekoCorePlugin.class); var settings = mock(Settings.class); var features = mock(Settings.Features.class);
         when(plugin.settings()).thenReturn(settings); when(settings.features()).thenReturn(features);
         when(features.minigamesEnabled()).thenReturn(true);
-        when(features.minigames()).thenReturn(new Settings.Destination("lobby", 27.5, 53, 21.5, 0, 0));
+        when(features.minigames()).thenReturn(new Settings.Destination("lobby", 4.5, 70, 8.5, 0, 0));
         when(plugin.messages()).thenReturn(mock(Messages.class)); when(plugin.permission(any(), anyString())).thenReturn(true);
         Player player = mock(Player.class); UUID id = UUID.randomUUID(); when(player.getUniqueId()).thenReturn(id); when(player.isOnline()).thenReturn(true);
         World from = mock(World.class), lobby = mock(World.class); when(player.getWorld()).thenReturn(from);
@@ -48,7 +48,7 @@ class DestinationServiceTest {
         List<Runnable> callbacks = new ArrayList<>(); doAnswer(call -> { callbacks.add(call.getArgument(0)); return null; }).when(plugin).onMain(any());
         when(player.teleport(any(Location.class), eq(TeleportCause.PLUGIN))).thenAnswer(call -> {
             Location at = call.getArgument(0); assertSame(lobby, at.getWorld());
-            assertEquals(27.5, at.getX()); assertEquals(53, at.getY()); assertEquals(21.5, at.getZ()); return true;
+            assertEquals(4.5, at.getX()); assertEquals(70, at.getY()); assertEquals(8.5, at.getZ()); return true;
         });
         try (var bukkit = mockStatic(Bukkit.class)) {
             bukkit.when(() -> Bukkit.getWorld("lobby")).thenReturn(lobby); bukkit.when(() -> Bukkit.getPlayer(id)).thenReturn(player);
@@ -62,8 +62,8 @@ class DestinationServiceTest {
     @Test void afkPoolLoadsChunkAndTeleportsFacingNorth() {
         var plugin=mock(NekoCorePlugin.class); var settings=mock(Settings.class);
         when(plugin.settings()).thenReturn(settings);
-        var pool=new Settings.AfkPool(true,new Settings.Destination("lobby",-10.5,54,33.5,180,0),3,
-                new Settings.AfkReward(300,10,1.10,0.45,1,4),new Settings.AfkTitle(true,true,40,10));
+        var pool=new Settings.AfkPool(true,new Settings.Destination("lobby",6.5,71,9.5,180,0),3,
+                new Settings.AfkReward(300,10,1.10,0.45,1,4),new Settings.AfkTitle(true,true,40,10),true);
         when(settings.afkPool()).thenReturn(pool); when(plugin.messages()).thenReturn(mock(Messages.class));
         when(plugin.permission(any(),anyString())).thenReturn(true);
         Player player=mock(Player.class); UUID id=UUID.randomUUID(); when(player.getUniqueId()).thenReturn(id); when(player.isOnline()).thenReturn(true);
@@ -73,7 +73,7 @@ class DestinationServiceTest {
         when(lobby.getChunkAtAsync(any(Location.class))).thenReturn(CompletableFuture.completedFuture(mock(Chunk.class)));
         List<Runnable> callbacks=new ArrayList<>(); doAnswer(call->{callbacks.add(call.getArgument(0));return null;}).when(plugin).onMain(any());
         when(player.teleport(any(Location.class),eq(TeleportCause.PLUGIN))).thenAnswer(call->{
-            Location at=call.getArgument(0); assertEquals(-10.5,at.getX()); assertEquals(54,at.getY()); assertEquals(33.5,at.getZ());
+            Location at=call.getArgument(0); assertEquals(6.5,at.getX()); assertEquals(71,at.getY()); assertEquals(9.5,at.getZ());
             assertEquals(180,at.getYaw()); assertEquals(0,at.getPitch()); return true;
         });
         try(var bukkit=mockStatic(Bukkit.class)) {

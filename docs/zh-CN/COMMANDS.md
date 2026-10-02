@@ -12,11 +12,12 @@
 
 ### 日常循环
 
-这五条命令构成了玩家每天的主要操作。
+这六条命令构成了玩家每天的主要操作。
 
 | 命令 | 做什么 |
 | --- | --- |
 | `/menu` | 打开服务器面板 |
+| `/tasks` | 直接打开同一个每日任务 GUI；任务关闭时不可用 |
 | `/checkin` | 领取今天的签到奖励 |
 | `/coins` | 看看自己有多少金币 |
 | `/sethome` | 把当前位置记成当前世界的小窝 |
@@ -93,6 +94,18 @@ Bag 是一个跨世界跟着玩家的物品容器。默认只在主世界允许�
 ---
 
 ## 管理命令
+
+### 名称查询（管理员）
+
+使用现有 `nekocore.admin` 权限；不写文件、不改数据库。
+
+| 命令 | 用法 |
+| --- | --- |
+| `/nekocore lookup` | 主手拿着物品，显示真实英文名及 `material: NAME`；空手会提醒 |
+| `/nekocore lookup bread` | 英文准确、前缀、包含和接近拼写查询，最多 10 个 |
+| `/nekocore lookup entity phanton` | 生物名称查询，可给出 `PHANTOM` 等相近名称 |
+
+控制台必须带英文关键词。支持大小写及 `minecraft:bread`，不支持中文翻译搜索。生物输出是列表示例，修改任务只换坏项，不整份覆盖正确列表。原命令与权限节点保持不变。
 
 所有管理命令都在 `/nekocore` 下面，需要 `nekocore.admin` 权限（默认只有 OP）。
 
@@ -249,6 +262,7 @@ Bag 是一个跨世界跟着玩家的物品容器。默认只在主世界允许�
 | 权限 | 对应命令 | 默认 |
 | --- | --- | --- |
 | `nekocore.menu` | `/menu` | `true` |
+| `nekocore.tasks` | `/tasks` | `true` |
 | `nekocore.coins` | `/coins` | `true` |
 | `nekocore.checkin` | `/checkin` | `true` |
 | `nekocore.home.set` | `/sethome` | `true` |

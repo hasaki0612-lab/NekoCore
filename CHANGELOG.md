@@ -1,5 +1,43 @@
 # Changelog
 
+## NekoCore Public 1.2.0
+
+Incremental usability work on the supplied Public 1.1.0 source, not a rewrite.
+
+- Shared startup/check/reload diagnostics identify file, path, purpose, current value and validation rule. Reliable YAML source marks supply line numbers; ambiguous sources fall back without guessing. Common independent name/message issues aggregate with a 20-issue display cap; complex domain rules remain fail-first within their loader.
+- Existing Material spelling suggestions remain. Admin `/nekocore lookup` supports a held item, English exact/prefix/substring/fuzzy search (10 max), console keywords and optional entity lookup, using the existing admin permission.
+- Three full presets: survival-only, lobby-survival, friends-server. Copy missing preset files only; never overwrite or auto-apply. Core stays available, coordinate/external-data features stay gated. Tests track complete keys and non-scenario values against defaults.
+- Five-line first-config guidance, no database flag or repeated restart banner. Stable doctor/status module lines retained, with a short Chinese DISABLED explanation appended.
+- Existing bilingual guides are extended in place, including folded Chinese configuration chapters; no runtime i18n system or automatic YAML writer is added.
+- Public artifact/PAPI version 1.2.0; config 9, messages 8, SQLite schema 5 unchanged. No new dependencies or V6; IDs/PDC/namespaces and Store/Bag recovery are preserved. Optional new lookup text falls back in memory without rewriting old YAML.
+- Java 25 `mvn -B clean verify`: 285 tests, zero failures/errors/skips. All 262 existing tests retained; two version assertions updated only. Live Paper/inventory/plugin combinations still require the documented manual checks.
+
+## NekoCore Public 1.1.0
+
+Backward-compatible additions to Public 1.0.0, not a new architecture or a renumbering of the private release line.
+
+### Added
+
+- `/tasks` opens the existing Daily Tasks GUI; `nekocore.tasks` defaults to true.
+- Personal, delayed, cache-only JoinInfo with configurable text and four administrator-provided OPEN_URL links; empty links stay hidden.
+- Configurable AFK session-end duration message, sent once on normal online termination and suppressed on quit/reload/shutdown.
+
+### Changed / fixed
+
+- Weekly leaderboard defaults to `FIXED`, respects yaw, supports `CENTER`, and reuses its marked TextDisplay.
+- Mascot overall Y offset defaults to 2.25, without moving NPCs or changing line spacing; disabled or missing-Citizens modules register no listener/task.
+- Compact default TAB with `{server}`, simple separators and no redundant subtitle; cache-only refresh and ownership restore remain.
+- Tips defaults to 180 seconds; the `/tasks` hint is skipped when Daily Tasks is disabled.
+- AFK reward attempts default to 60 seconds, with warning/fallback for invalid intervals; detection, grace, reward probability and pools are preserved.
+- Bilingual documentation updated in place. Historical migration snapshots retained with deployment-specific titles and coordinates generalised.
+
+### Compatibility and verification
+
+- Config 8 → 9; messages 7 → 8. Existing customised values survive the versioned merge with original-file backups.
+- SQLite schema stays 5; V1→V5, stable IDs, namespace/PDC keys, and Store/Bag recovery are unchanged.
+- No new dependencies. Public GeoIP remains opt-in with no MMDB shipped.
+- 262 automated tests, zero failures/errors/skips. Live Paper/Citizens/display and inventory combinations still need the documented manual checks.
+
 ## NekoCore Public 1.0.0
 
 This is the first public release of NekoCore.

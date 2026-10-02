@@ -26,7 +26,7 @@ class NekoExpansionTest {
         var profile=new Profile(id,"Momo",500,3,275,3600,1,2,true);
         when(data.view(id)).thenReturn(profile); when(store.cached(id)).thenReturn(profile);
         when(plugin.prefixes()).thenReturn(new PrefixService(plugin)); var expansion=new NekoExpansion(plugin);
-        assertEquals("1.0.0", expansion.getVersion());
+        assertEquals("1.2.0", expansion.getVersion());
         when(titles.cached(id)).thenReturn(new TitleRepository.Titles(Set.of(),""));
         assertEquals("",expansion.onRequest(player,"title")); assertEquals("",expansion.onRequest(player,"title_prefix"));
         assertEquals("[Lv.3] ",expansion.onRequest(player,"display_prefix"));

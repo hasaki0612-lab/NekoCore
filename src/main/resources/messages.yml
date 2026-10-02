@@ -1,5 +1,5 @@
-# NekoCore Public 1.0.0。支持 & 颜色码、&#RRGGBB 与全局 {server}；不解析 MiniMessage。
-messages-version: 7
+# NekoCore Public 1.2.0。支持 & 颜色码、&#RRGGBB 与全局 {server}；不解析 MiniMessage。
+messages-version: 8
 prefix: '&#9FD9F6[NekoCore] &r'
 no-permission: '&#EDB9CE这个功能暂时还不能使用。'
 players-only: '&#FFE49A请在游戏里使用这个功能。'
@@ -63,16 +63,26 @@ checkin-done: '&#B6E3D0已签到'
 checkin-loading: '&#B2C3CF读取中'
 tab:
   header: |-
-    &#61C8F2✦ {server} &#A88BE8· 全局面板 &#61C8F2✦
+    &#9FD9F6✦ {server} ✦
 
     &#B2C3CF位置  &fX {x}   Y {y}   Z {z}
     &#B2C3CFTPS   {tps_1m} &#B2C3CF· {tps_5m} &#B2C3CF· {tps_15m}
-
+    &#B2C3CF────────────────────────
   footer: |-
     
     &#B2C3CF在线  &f{online}/{max_players}     &#B2C3CF金币  &#FFE49A{coins}
-    &#B2C3CFUTC+8 · &f{time}
-    &#B2C3CF服务器运行 · &f{uptime}
+    &#B2C3CFUTC+8 &f{time} &#B2C3CF· 运行 &f{uptime}
+join-info:
+  lines:
+    - '&#9FD9F6欢迎来到 {server}，&f{player}&#9FD9F6！'
+    - '&#B2C3CFLv.&f{level} &#B2C3CF· 金币 &f{coins} &#B2C3CF· 游玩 &f{playtime}'
+    - '&#B2C3CF输入 &#9FD9F6/menu &#B2C3CF打开面板，&#9FD9F6/tasks &#B2C3CF查看今日任务。'
+  buttons:
+    docs: '&#9FD9F6[文档]'
+    website: '&#9FD9F6[网站]'
+    community: '&#9FD9F6[社区]'
+    discord: '&#9FD9F6[Discord]'
+  link-hover: '&#B2C3CF点击在浏览器打开'
 welcome-title:
   title: '&#F5DDEA欢迎！ &#8EDCF6{player}'
   subtitle: '&#CFC4E8{server}'
@@ -360,6 +370,7 @@ tpn-success-to: '&#B6E3D0{player} &f已经抵达你的身边啦。'
 tpn-player-left: '&#B2C3CF有一方离线了，这次传送请求已取消。'
 tpn-reloaded: '&#B2C3CF配置正在更新，这次传送请求已取消。'
 afk-pool:
+  end-message: '&#B2C3CF本次挂机时长 · &#9FD9F6{duration}'
   title: '&#D7C9EC你正在挂机～'
   subtitle: '&#DCE8EE下一份奖励 · &#D7C9EC{time}'
   reward-exp: '&#DCE8EE收到 &#D7C9EC{exp} EXP &#DCE8EE啦～'
@@ -411,6 +422,7 @@ enchant-names:
   breach: 破甲
   wind_burst: 风爆
 usage:
+  tasks: '&#B2C3CF用法：&f/tasks'
   menu: '&#B2C3CF输入 &#9FD9F6/menu &f打开服务器面板'
   coins: '&#B2C3CF输入 &#9FD9F6/coins &f看看自己的金币'
   checkin: '&#B2C3CF输入 &#9FD9F6/checkin &f领取今日小礼物'
@@ -427,6 +439,22 @@ usage:
     &#B2C3CFcoins add|set|take <player|UUID> <amount> · exp add|set <player|UUID> <amount>
     &#B2C3CFcleanup now · reload · levelshop open <player>
     &#B2C3CFconfig check · status（doctor 同义）
+    &#B2C3CFlookup [英文关键词] · lookup entity <英文关键词>
     &#B2C3CFstore refresh-enchants · store reset|status <player|UUID>
     &#B2C3CFtasks status · tasks reroll confirm · tasks reset <player>
     &#B2C3CFtasks progress <player> <taskId> <amount>
+
+# 管理员物品查询；缺失项由 Messages 的现有默认补全机制加载，不覆盖自定义文案。
+lookup:
+  console: '&#FFE49A控制台没有手上物品，请提供英文关键词，例如 /nekocore lookup sword。'
+  empty-hand: '&#FFE49A请先在主手拿着要查询的物品，或输入 /nekocore lookup <英文关键词>。'
+  held: |-
+    &#B6E3D0材料名：&f{material}
+    &#B2C3CF可直接填入 config.yml：&fmaterial: {material}
+  usage: '&#B2C3CF用法：&f/nekocore lookup [英文关键词] &7或 &f/nekocore lookup entity <英文关键词>'
+  english-only: '&#FFE49A目前只支持英文 Minecraft ID / Material 名，不猜中文翻译。可以拿着物品执行 /nekocore lookup。'
+  none: '&#FFE49A没有找到接近「{keyword}」的名称，请试英文名称或拿着物品查询。'
+  results: '&#B6E3D0找到 {count} 个{kind}名称（最多 10 个）：'
+  material-line: '&f{name} &#B2C3CF→ material: {name}'
+  entity-line: '&f{name} &#B2C3CF→ entities: [{name}]'
+  copy: '&#B2C3CF可把名称复制进 config.yml 的 {kind}；查询不会修改配置。'

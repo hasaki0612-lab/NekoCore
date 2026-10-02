@@ -15,9 +15,9 @@ class ResourceContractTest {
         try(var reader=new InputStreamReader(getClass().getResourceAsStream(path),StandardCharsets.UTF_8)){yaml.load(reader);} return yaml;
     }
     @Test void pluginCommandsAreNamespacedNormallyAndLevelshopHasNoPublicCommand() throws Exception {
-        var yaml=resource("/plugin.yml"); assertEquals("1.0.0",yaml.getString("version"));
+        var yaml=resource("/plugin.yml"); assertEquals("1.2.0",yaml.getString("version"));
         var messages=resource("/messages.yml");
-        for(String command:List.of("menu","coins","checkin","home","sethome","check","store","bag","tpn","yes","no","nekocore")) {
+        for(String command:List.of("menu","tasks","coins","checkin","home","sethome","check","store","bag","tpn","yes","no","nekocore")) {
             assertTrue(yaml.contains("commands."+command));
             assertTrue(messages.isString("usage."+(command.equals("nekocore")?"admin":command)),command+" usage");
         }
@@ -37,8 +37,8 @@ class ResourceContractTest {
         return component instanceof TextComponent text && text.content().contains(token) && TextColor.fromHexString("#FFE49A").equals(text.color())
                 || component.children().stream().anyMatch(child -> hasToken(child,token));
     }
-    @Test void tipsCoverEachNewCommandSeparatelyAndKeepFiveMinuteCadence() throws Exception {
-        var config=resource("/config.yml"); assertEquals(300,config.getInt("tips.interval-seconds"));
+    @Test void tipsCoverEachNewCommandSeparatelyAndKeepThreeMinuteCadence() throws Exception {
+        var config=resource("/config.yml"); assertEquals(180,config.getInt("tips.interval-seconds"));
         var tips=config.getStringList("tips.messages");
         for(String command:List.of("/store","/bag","/tpn","/yes","/no")) assertTrue(tips.stream().anyMatch(line -> line.contains(command)),command);
         assertTrue(tips.stream().noneMatch(line -> line.contains("/yes") && line.contains("/no")));
@@ -46,11 +46,11 @@ class ResourceContractTest {
     }
     @Test void afkAndLocationDefaultsArePrivateCoarseAndConfigurable() throws Exception {
         var config=resource("/config.yml"); var messages=resource("/messages.yml");
-        assertEquals(8,config.getInt("config-version")); assertEquals(7,messages.getInt("messages-version"));
+        assertEquals(9,config.getInt("config-version")); assertEquals(8,messages.getInt("messages-version"));
         assertTrue(config.getBoolean("tab.show-location-prefix"));
         assertEquals(34,config.getInt("gui.items.afk-pool.slot")); assertEquals("WATER_BUCKET",config.getString("gui.items.afk-pool.material"));
         assertFalse(config.getBoolean("location-prefix.enabled")); assertFalse(config.getBoolean("afk-pool.enabled"));
-        assertFalse(config.getBoolean("afk-pool.position-configured")); assertEquals(300,config.getInt("afk-pool.reward.interval-seconds"));
+        assertFalse(config.getBoolean("afk-pool.position-configured")); assertEquals(60,config.getInt("afk-pool.reward.interval-seconds"));
         assertEquals(1,config.getInt("afk-pool.reward.coin-min")); assertEquals(4,config.getInt("afk-pool.reward.coin-max"));
         assertEquals(0.45,config.getDouble("afk-pool.reward.coin-chance")); assertTrue(messages.contains("afk-pool.title"));
         assertEquals(2,config.getInt("afk-pool.exit-grace-seconds")); assertTrue(config.getBoolean("welcome-title.enabled"));
@@ -73,7 +73,12 @@ class ResourceContractTest {
                 "\\b(?!0\\.0\\.0\\.0\\b)(?!127\\.)(?!10\\.)(?!192\\.168\\.)(?!169\\.254\\.)"
                         + "(?!172\\.(?:1[6-9]|2[0-9]|3[01])\\.)(?!192\\.0\\.2\\.)(?!198\\.51\\.100\\.)"
                         + "(?!203\\.0\\.113\\.)(?:\\d{1,3}\\.){3}\\d{1,3}\\b");
-        for (String path : List.of("/config.yml", "/messages.yml", "/plugin.yml")) {
+        List<String> resources = new ArrayList<>(List.of("/config.yml", "/messages.yml", "/plugin.yml"));
+        for (int version = 1; version <= 8; version++) for (String type : List.of("config", "messages")) {
+            String path = "/migration/v" + version + "-" + type + ".yml";
+            if (getClass().getResource(path) != null) resources.add(path);
+        }
+        for (String path : resources) {
             String text;
             try (var input = getClass().getResourceAsStream(path)) {
                 text = new String(input.readAllBytes(), StandardCharsets.UTF_8);
@@ -81,7 +86,7 @@ class ResourceContractTest {
             for (String forbidden : List.of("Momo Land", "DeepSeek", "小鲸鱼娘", "大肥鱼", "RainYun", "Evoxt"))
                 assertFalse(text.contains(forbidden), path + " contains " + forbidden);
             var address = forbiddenAddress.matcher(text);
-            assertFalse(address.find(), path + " contains a routable IP address: " + address.group());
+            assertFalse(address.find(), () -> path + " contains a routable IP address: " + address.group());
         }
     }
     @Test void freshInstallIsSelfContainedAndOptionalIntegrationsStayOptional() throws Exception {
@@ -106,8 +111,13 @@ class ResourceContractTest {
                 "weekly-coin-leaderboard.position-configured", "mascot.enabled"))
             assertFalse(config.getBoolean(path), path);
     }
-    @Test void futureJoinChatInfoIsNotImplementedAsMessagesOrHologramPlaceholders() throws Exception {
+    @Test void joinInfoHasChatTemplatesAndEmptyExternalLinks() throws Exception {
         var messages=resource("/messages.yml");
-        for(String key:List.of("join-info","discord","server-lines","donation","documentation")) assertFalse(messages.contains(key),key);
+        var config=resource("/config.yml");
+        assertTrue(messages.isList("join-info.lines"));
+        assertTrue(config.getBoolean("join-info.enabled"));
+        for(String id:List.of("docs","website","community","discord")) assertEquals("",config.getString("join-info.links."+id));
+        assertEquals("FIXED",config.getString("weekly-coin-leaderboard.billboard"));
+        assertTrue(config.getBoolean("afk-pool.end-message-enabled"));
     }
 }

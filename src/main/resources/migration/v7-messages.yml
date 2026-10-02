@@ -1,0 +1,432 @@
+# NekoCore Public 1.0.0。支持 & 颜色码、&#RRGGBB 与全局 {server}；不解析 MiniMessage。
+messages-version: 7
+prefix: '&#9FD9F6[NekoCore] &r'
+no-permission: '&#EDB9CE这个功能暂时还不能使用。'
+players-only: '&#FFE49A请在游戏里使用这个功能。'
+loading: '&#B2C3CF资料正在准备中，稍等一下吧。'
+storage-error: '&#EDB9CE这次没能保存，请稍后再试；若一直这样，请联系管理员。'
+unknown-player: '&#EDB9CE还没有这位玩家的资料，请先让 TA 加入服务器。'
+ambiguous-player: '&#FFE49A这个名字对应多份历史资料，请改用 UUID。'
+invalid-amount: '&#EDB9CE请填写一个不小于 0 的整数。'
+amount-overflow: '&#EDB9CE这个数量有点大，请换一个小一些的数值。'
+coins: '&f你的金币 &#FFE49A{coins} &#9FD9F6✦'
+coins-updated: '&#B6E3D0已更新 &f{player} &#B6E3D0的金币 · 余额 &#FFE49A{coins}'
+exp-updated: '&#B6E3D0已更新 &f{player} &#B2C3CF· 累计经验 &f{total_exp} &#B2C3CF· 等级 &f{level} &#B2C3CF· 本级 &f{exp}/{exp_needed}'
+level-up: '&#B6E3D0成长啦 &f· 现在是 &#FFE49ALv.{level}'
+daily-soon: '&#B2C3CF每日任务已经开放啦，打开面板就能看看今天的小目标。'
+privacy-on: '&#B6E3D0开启'
+privacy-off: '&#B2C3CF关闭'
+privacy-updated: '&f网络地区显示 · {show_ip} &#B2C3CF（不会公开完整 IP）'
+location-prefix-format: '&#A8BDCC[&f{location}&#A8BDCC] &r'
+geoip-database-missing: '网络地区前缀已停用：未找到或无法读取 {file}。NekoCore 其他功能不受影响。'
+home-set: '&#B6E3D0已记下 &f{world} &#B6E3D0的小窝 &#B2C3CF· &f{x}, {y}, {z}'
+home-missing: |-
+  &#B2C3CF你在 &f{world} &#B2C3CF还没有 Home
+  &f先在那里睡一觉，或用 &#9FD9F6/sethome &f记下来吧
+home-world-unavailable: '&#EDB9CE暂时找不到 &f{world}&#EDB9CE，看看名字是否正确，或请管理员确认世界已开启。'
+home-bed-saved: |-
+  &#9FD9F6✓ 已把这里记作 &f{world} &#9FD9F6的 Home
+  &#B2C3CF位置 · X &f{x}  &#B2C3CFY &f{y}  &#B2C3CFZ &f{z}
+  &#B2C3CF以后输入 &#9FD9F6/home {world} &#B2C3CF就可以回来啦
+home-bed-unsafe: '&#FFE49A床边还没有合适的落脚处，原来的 Home 没有改动。留出平地和两格高的空位吧。'
+home-bed-failed: '&#EDB9CE这次没能记下床边的 Home，稍后再试试吧。'
+home-check: '&#9FD9F6{world} &#B2C3CF的 Home · &f{x}, {y}, {z} &#B2C3CF（朝向 {yaw} / {pitch}）'
+home-success: '&#B6E3D0到家啦，欢迎回来。'
+home-failed: '&#EDB9CE这次传送没能完成，可能受到其他插件的限制。'
+home-invalid: '&#EDB9CE这个 Home 已超出世界边界或高度范围，需要重新记下位置。'
+home-busy: '&#B2C3CF正在准备回家，稍等一下。'
+home-moved: '&#FFE49A你已切换世界，这次回家传送取消了。'
+survival-unavailable: '&#EDB9CE生存入口暂时没能打开，请联系管理员看看。'
+destination-unavailable: '&#EDB9CE这个入口暂时不可用，请联系管理员检查世界与坐标。'
+destination-busy: '&#B2C3CF正在准备传送，稍等一下。'
+destination-moved: '&#FFE49A你已切换世界，这次传送取消了。'
+destination-arrived: '&#B6E3D0传送完成。'
+afk-pool-arrived: '&#B6E3D0到挂机池啦，泡进水里就会开始计时。'
+reload-success: '&#B6E3D0配置已经更新好啦，计时任务也重新开始。'
+reload-failed: '&#EDB9CE这次没能重载：&f{reason} &#B2C3CF（仍使用原配置）'
+reload-busy: '&#B2C3CF配置正在更新，稍后再试吧。'
+config-check-success: '&#B6E3D0配置检查通过；没有应用任何改动。'
+config-check-failed: '&#EDB9CE配置检查失败：&f{reason} &#B2C3CF（没有应用任何改动）'
+cleanup-warning: '&f掉落物将在 &#FFE49A{seconds}秒 &f后整理，记得拾好地上的小物件。'
+# 数字和“秒”不插空格或颜色码，作为同一段文字渲染。
+cleanup-countdown: '&#B2C3CF掉落物整理 · &#FFE49A{seconds}秒'
+cleanup-done: '&#B6E3D0整理好了 &f· 清理了 &#FFE49A{count} &f个掉落物'
+# 只发给死亡者本人；不修改死亡或重生逻辑。
+death-location: '&#EF9A9A死亡位置 &#B2C3CF· &f{world} &#B2C3CF· X &f{x} &#B2C3CFY &f{y} &#B2C3CFZ &f{z}'
+checkin-reminder: '&f今天的小礼物还没领取，输入 &#9FD9F6/checkin &f或打开 &#9FD9F6/menu &f签到吧。'
+checkin-success: '&#B6E3D0签到成功 &f· 收到 &#FFE49A{reward_coins} 金币 &f和 &#FFE49A{reward_exp} 经验'
+checkin-auto-success: '&#B6E3D0已为你自动签到 &f· 收到 &#FFE49A{reward_coins} 金币 &f和 &#FFE49A{reward_exp} 经验'
+checkin-already: '&#B2C3CF今天已经签到过啦，明天再来领取小礼物。'
+checkin-disabled: '&#FFE49A每日签到暂时休息，稍后再来吧。'
+checkin-available: '&#FFE49A待签到'
+checkin-done: '&#B6E3D0已签到'
+checkin-loading: '&#B2C3CF读取中'
+tab:
+  header: |-
+    &#61C8F2✦ {server} &#A88BE8· 全局面板 &#61C8F2✦
+
+    &#B2C3CF位置  &fX {x}   Y {y}   Z {z}
+    &#B2C3CFTPS   {tps_1m} &#B2C3CF· {tps_5m} &#B2C3CF· {tps_15m}
+
+  footer: |-
+    
+    &#B2C3CF在线  &f{online}/{max_players}     &#B2C3CF金币  &#FFE49A{coins}
+    &#B2C3CFUTC+8 · &f{time}
+    &#B2C3CF服务器运行 · &f{uptime}
+welcome-title:
+  title: '&#F5DDEA欢迎！ &#8EDCF6{player}'
+  subtitle: '&#CFC4E8{server}'
+weekly-coins:
+  title: '&#FFE49A═══ 金币周榜 &#61C8F2· 前10 &#FFE49A═══'
+  first: '&#F5C96A1. &f{player} &#B2C3CF· &#FFE49A{coins}'
+  second: '&#DCE8EE2. &f{player} &#B2C3CF· &#FFE49A{coins}'
+  third: '&#E8B6853. &f{player} &#B2C3CF· &#FFE49A{coins}'
+  line: '&#FFE49A{rank}. &f{player} &#B2C3CF· &#FFE49A{coins}'
+  empty: '&#B2C3CF本周还没有金币记录'
+mascot:
+  hologram-title: '&#9FD9F6✦ {server} Mascot ✦'
+  hologram-nickname: '&#B2C3CFMascot'
+  replies:
+    - '&#9FD9F6Mascot：&f欢迎来到 {server}！'
+    - '&#9FD9F6Mascot：&f今天也祝你冒险顺利。'
+    - '&#9FD9F6Mascot：&f需要帮助时可以问问管理员。'
+    - '&#9FD9F6Mascot：&f记得领取今天的签到奖励。'
+    - '&#9FD9F6Mascot：&f打开 /menu 看看服务器功能吧。'
+    - '&#9FD9F6Mascot：&f准备好开始新的旅程了吗？'
+    - '&#9FD9F6Mascot：&f和朋友一起玩会更有趣。'
+    - '&#9FD9F6Mascot：&f今天的每日任务已经刷新。'
+    - '&#9FD9F6Mascot：&f记得给背包留一点空间。'
+    - '&#9FD9F6Mascot：&f累了就找个安全的地方休息。'
+    - '&#9FD9F6Mascot：&f商店里也许有你需要的材料。'
+    - '&#9FD9F6Mascot：&f你的 Home 可以按世界分别保存。'
+    - '&#9FD9F6Mascot：&f输入 /coins 可以查看金币。'
+    - '&#9FD9F6Mascot：&f祝你今天收获满满。'
+    - '&#9FD9F6Mascot：&f感谢你来到 {server}。'
+    - '&#9FD9F6Mascot：&f我会一直待在管理员安排的位置。'
+  over-limit-replies:
+    - '&#EDB9CEMascot：&f请慢一点，我还在这里。'
+    - '&#EDB9CEMascot：&f互动太快啦，稍等一下吧。'
+    - '&#EDB9CEMascot：&f让我休息一小会儿。'
+    - '&#EDB9CEMascot：&f过几秒再来找我吧。'
+    - '&#EDB9CEMascot：&f慢慢来，别着急。'
+store-layout-info-name: '&#9FD9F6商店小提示'
+store-layout-info-lore:
+  - '&f右键买入 · 左键出售'
+  - '&#B2C3CF商品按从左到右、从上到下排列'
+  - '&#B2C3CF你的金币 · &#FFE49A{coins}'
+daily-tasks:
+  disabled: '&#FFE49A今日任务暂时休息，稍后再来看看吧。'
+  gui-title: '&#61C8F2{server} &8· &#A88BE8每日任务'
+  difficulty:
+    easy: '&#9ED9C3简单'
+    normal: '&#61C8F2普通'
+    hard: '&#D99AB7困难'
+  item-difficulty: '&#B2C3CF难度 · {difficulty}'
+  item-task: '&#9FD9F6任务'
+  item-progress: '&#9FD9F6进度'
+  item-progress-value: '&f{progress} &#B2C3CF/ &f{target}'
+  item-reward: '&#9FD9F6奖励'
+  item-reward-coins: '&#FFE49A+ {coins} 金币'
+  item-reward-exp: '&#CBBFEF+ {exp} EXP'
+  item-state: '&#B2C3CF状态 · {state}'
+  state-progress: '&#C5E9FA进行中'
+  state-complete: '&#B6E3D0✓ 已完成'
+  info-name: '&#9FD9F6今日任务信息'
+  info-lore:
+    - '&f全服今天共用这一套 9 个任务'
+    - '&#B2C3CF进度与奖励仍然属于你自己'
+    - '&#B2C3CF日期 · &f{date}'
+    - '&#B2C3CF下次刷新 · &f{refresh} &#B2C3CF（北京时间）'
+  completion-messages:
+    - |-
+      &#B6E3D0✦ 「{task}&#B6E3D0」完成啦～
+      &#FFE49A+{coins} 金币 &#B2C3CF· &#CBBFEF+{exp} EXP
+    - |-
+      &#B6E3D0✓ {task} &#B6E3D0完成
+      &#B2C3CF奖励已经悄悄放进口袋啦～ &#FFE49A{coins} 金币 &#B2C3CF· &#CBBFEF{exp} EXP
+    - |-
+      &#9FD9F6今天的「{task}&#9FD9F6」已经解决 ✦
+      &#FFE49A+{coins} 金币 &#B2C3CF· &#CBBFEF+{exp} EXP
+    - |-
+      &#B6E3D0任务完成 · {task}
+      &#B2C3CF做得不错嘛～ &#FFE49A+{coins} &#B2C3CF· &#CBBFEF+{exp} EXP
+    - |-
+      &#9FD9F6「{task}&#9FD9F6」完成啦～
+      &#B2C3CF今天也很努力呢 (｡･ω･｡) &#B2C3CF· &#FFE49A+{coins} &#B2C3CF· &#CBBFEF+{exp} EXP
+    - |-
+      &#B6E3D0小目标达成 · {task} ✦
+      &#B2C3CF奖励到账：&#FFE49A{coins} 金币 &#B2C3CF· &#CBBFEF{exp} EXP
+  tasks:
+    simple_gardener:
+      name: '&#9ED9C3小小园丁'
+      description: ['&f用剪刀或精准采集工具', '&f收集树叶、草、蕨类或花朵，共 16 个']
+    simple_healthy:
+      name: '&#9ED9C3保持健康'
+      description: ['&f成功吃下 1 个苹果']
+    simple_shear_sheep:
+      name: '&#9ED9C3减轻负重'
+      description: ['&f亲手为 1 只羊剪毛']
+    simple_good_morning:
+      name: '&#9ED9C3早安！{server}！'
+      description: ['&f今天累计在线 20 分钟', '&#B2C3CF可以分几次完成，挂机也会计时']
+    simple_crafting:
+      name: '&#9ED9C3手工作业'
+      description: ['&f在工作台制作 5 种不同 Material 的物品', '&#B2C3CF随身 2×2 合成不计入']
+    simple_eat_food:
+      name: '&#9ED9C3今天也要好好吃饭'
+      description: ['&f累计成功食用任意食物 5 个']
+    simple_pastoral:
+      name: '&#9ED9C3田园牧歌'
+      description: ['&f亲手成功播种 8 次', '&#B2C3CF种子、胡萝卜与马铃薯都可以']
+    normal_harvest:
+      name: '&#61C8F2大丰收！'
+      description: ['&f收获 24 个成熟农作物', '&#B2C3CF未成熟作物不会计入']
+    normal_dessert:
+      name: '&#61C8F2甜点大师'
+      description: ['&f制作 1 个蛋糕、1 个南瓜派', '&f或累计制作 9 块曲奇']
+    normal_tax_collector:
+      name: '&#61C8F2税收官'
+      description: ['&f与村民完成 1 次有效交易']
+    normal_cleanup:
+      name: '&#61C8F2日常清理'
+      description: ['&f亲手击败 8 只敌对生物']
+    normal_deepslate_worker:
+      name: '&#61C8F2地下工作者'
+      description: ['&f亲手挖掘 12 个深板岩矿石']
+    normal_smelt:
+      name: '&#61C8F2耐心等待....'
+      description: ['&f从熔炉、烟熏炉或高炉', '&f累计取出 16 个烧制成品']
+    normal_blacksmith:
+      name: '&#61C8F2铁匠铺'
+      description: ['&f通过合成制作 3 个铁质工具', '&#B2C3CF默认不包含铁剑']
+    normal_fishing:
+      name: '&#61C8F2今晚加餐！'
+      description: ['&f用钓鱼竿真正钓到 3 条鱼']
+    hard_enchant:
+      name: '&#D99AB7知识的力量'
+      description: ['&f使用附魔台成功附魔 1 件物品', '&#B2C3CF铁砧不计入']
+    hard_tycoon:
+      name: '&#D99AB7大富翁！'
+      description: ['&f当天累计完成 5 次村民交易']
+    hard_marksman:
+      name: '&#D99AB7百步穿杨'
+      description: ['&f用弓或弩击败 1 只合法飞行生物', '&#B2C3CF普通恶魂可以，乐魂永远不算']
+    hard_mlg_water:
+      name: '&#D99AB7肌肉记忆'
+      description: ['&f完成至少 16 格高的落地水', '&#B2C3CF水必须由你在本次下落中临时放置']
+    hard_iron_golem:
+      name: '&#D99AB7村庄阴雄'
+      description: ['&f亲手击败 1 只铁傀儡']
+tasks-admin-status: |-
+  &#9FD9F6今日任务 · &f{date} &#B2C3CF· 下次刷新 {refresh}
+  {tasks}
+tasks-admin-status-line: '{difficulty} · {task_id} · {task}'
+tasks-admin-rerolled: '&#B6E3D0已重新抽取 &f{date} &#B6E3D0的任务；旧 rotation 进度保留归档，新任务从 0 开始。'
+tasks-admin-reset: '&#B6E3D0已清空 &f{player} &#B6E3D0在当前任务轮换中的进度。'
+tasks-admin-progress: '&#B6E3D0已推进 &f{player} &#B2C3CF· {task_id} → &f{progress}'
+tasks-task-not-selected: '&#FFE49A这个 task ID 不在今天的轮换中，先用 status 看看吧。'
+tasks-admin-usage: |-
+  &#9FD9F6任务管理 &f· /nekocore tasks
+  &#B2C3CFstatus · reroll confirm · reset <player> · progress <player> <taskId> <amount>
+profile:
+  - '&#9FD9F6—— &f{player} 的资料 &#9FD9F6——'
+  - '&#B2C3CF等级 &f{level} &7· &#B2C3CF本级经验 &f{exp}/{exp_needed}'
+  - '&#B2C3CF金币 &#FFE49A{coins} &7· &#B2C3CF累计经验 &f{total_exp}'
+  - '&#B2C3CF游玩时长 &f{playtime}'
+  - '&#B2C3CF首次加入 &f{first_join}'
+  - '&#B2C3CF最近加入 &f{last_join}'
+feature-disabled: '&#FFE49A这个功能暂时休息，稍后再来吧。'
+not-enough-coins: '&#EDB9CE金币还差一点点呢～ &f再攒一些就可以买下它啦。'
+inventory-full: '&#FFE49A背包放不下这些物品，整理几个空位再试吧。'
+exchange-busy: '&#B2C3CF正在收好这次物品，稍等一下再操作。'
+exchange-stale: '&#FFE49A物品或位置刚刚发生了变化，这次没有交付，请重新打开再试。'
+exchange-recovery: '&#EDB9CE有一笔物品记录需要核对，暂时无法继续交易或取放 Bag。请联系管理员，物品记录已保留。'
+ui-cursor: '&#FFE49A先把鼠标上的物品放回背包，再打开这里吧。'
+ui-back: '&#9FD9F6返回上一级'
+ui-close: '&#9FD9F6关闭'
+ui-back-lore: ['&#B2C3CF点击箭头返回']
+ui-empty-lore: []
+ui-previous: '&#9FD9F6上一页'
+ui-next: '&#9FD9F6下一页'
+title-menu-title: '&#55C7F3{server} &8· &#A786E8头衔小铺'
+title-detail-title: '&#A786E8{title} &8· &#55C7F3头衔详情'
+title-lobby-only: '&#FFE49A请回大厅找头衔 NPC，这里暂时不能打开头衔小铺。'
+title-item-name: '{title_prefix}'
+title-item-lore: ['', '&#B2C3CF状态 · {status}', '&#B2C3CF价格 · &#FFE49A{price} 金币', '&#9FD9F6点击查看详情']
+title-state-equipped: '&#B6E3D0已装备'
+title-state-owned: '&#B6E3D0已拥有 · 免费换戴'
+title-state-unowned: '&#B2C3CF尚未拥有'
+title-unequip: '&#9FD9F6卸下头衔'
+title-unequip-lore: ['&f恢复显示等级前缀', '&#B2C3CF已购买的头衔和权益都还在']
+title-equip: '&#B6E3D0换戴这个头衔'
+title-purchase: '&#FFE49A购买并装备'
+title-confirm-lore: ['&f头衔 · &#CBBFEF{title}', '&#B2C3CF状态 · {status}', '&#B2C3CF价格 · &#FFE49A{price}', '&#B2C3CF余额 · &f{coins}', '', '&#B2C3CF已拥有时换戴不扣金币']
+title-already-owned: '&#B2C3CF你已经拥有这个头衔，换戴不用再购买。'
+title-not-owned: '&#EDB9CE还没有拥有这个头衔，先在小铺里看看吧。'
+title-purchased: |-
+  &#B6E3D0得到新头衔啦 ✦ &#CBBFEF{title}
+  &#B2C3CF花费 &#FFE49A{price} &#B2C3CF· 剩余金币 &f{coins}
+title-equipped: '&#B6E3D0已换戴 &#CBBFEF{title}'
+title-removed: '&#B6E3D0已卸下头衔，现在显示等级前缀。'
+store-title: '&#9FD9F6{server} &7· &f日常商店'
+store-category-name: '&#9FD9F6{category}'
+store-category-lore: ['&f看看今天需要些什么', '&#B2C3CF点击进入分类']
+store-products-title: '&#9FD9F6商店 &7· &f{category}'
+store-product-name: '&f{product}'
+store-product-lore:
+  - '&#B2C3CF买价 · &#FFE49A{buy_price} 金币/件'
+  - '&#B2C3CF卖价 · &#FFE49A{sell_price}'
+  - '&#B2C3CF每期可买 · &f{limit}'
+  - ''
+  - '&#9FD9F6右键购买 &#B2C3CF· &#B6E3D0左键出售'
+store-book-name: '{enchantment} {level} · {tier}'
+store-book-maximum: '最高阶'
+store-book-normal: '低阶'
+store-book-lore: ['&#CBBFEF每天 04:00 更新 · 北京时间', '&#B2C3CF本期每人每款一本；附魔书不回收']
+store-unavailable: '不回收'
+store-no-sell: '&#FFE49A这件商品暂不回收，可以看看其他物品。'
+store-quantity-title: '&#9FD9F6{action} &7· &f{product}'
+store-quantity-lore:
+  - '&#B2C3CF单价 · &#FFE49A{price} 金币'
+  - '&#B2C3CF已选数量 · &f{quantity}'
+  - '&#B2C3CF合计 · {cost_color}{total} 金币'
+  - '&#B2C3CF余额 · &f{coins}'
+  - '&#B2C3CF本期剩余 · &f{remaining} / {limit}'
+  - '&#B2C3CF背包中匹配物品 · &f{owned}'
+store-action-buy: '购买'
+store-action-sell: '出售'
+store-cost-affordable: '&#B6E3D0'
+store-cost-unaffordable: '&#EDB9CE'
+store-preset: '&#9FD9F6选择 {quantity} 个'
+store-preset-lore: ['&#B2C3CF合计 · {cost_color}{total} 金币', '&#B2C3CF选择后点击确认']
+store-custom: '&#9FD9F6自定义数量'
+store-custom-lore: ['&f在聊天框填写数量', '&#B2C3CF这条输入不会发给其他玩家']
+store-confirm: '&#B6E3D0确认{action} {quantity} 个'
+store-confirm-lore: ['&f{product}', '&#B2C3CF合计 · {cost_color}{total} 金币', '&#B2C3CF余额 · &f{coins}', '', '&#FFE49A确认后会直接完成交易']
+store-range: '&#FFE49A这次最多可操作 &f{maximum} &#FFE49A个，请调整数量再确认。'
+store-limit: '&#FFE49A这件商品的本期限额已用完，下一期再来看看吧。'
+store-expired: '&#FFE49A商品批次或日期已经更新，请重新打开商店。'
+store-not-owned: '&#EDB9CE背包里没有这么多匹配物品；改名、附魔或有损耗的物品不会当作普通商品回收。'
+store-bought: |-
+  &#B6E3D0买到啦 ✦ &f{product} × {quantity}
+  &#B2C3CF花费 &#FFE49A{total} &#B2C3CF· 剩余金币 &f{coins}
+store-sold: |-
+  &#B6E3D0收好金币啦 ✦ &f{product} × {quantity}
+  &#B2C3CF收入 &#FFE49A{total} &#B2C3CF· 当前金币 &f{coins}
+store-input-prompt: '&f请在聊天框输入 &#9FD9F61~{maximum} &f的整数。&#B2C3CF{seconds}秒内有效，输入「取消」或 cancel 返回。'
+store-input-invalid: '&#EDB9CE请填写 1~{maximum} 的整数；输入「取消」即可返回。'
+store-input-timeout: '&#B2C3CF等候时间到了，已返回数量选择。'
+store-input-cancelled: '&#B2C3CF已取消输入，回到数量选择。'
+store-refreshed: '&#B6E3D0附魔书已换新，每款购买次数也重新开始。'
+store-reset: '&#B6E3D0已重置 &f{player} &#B6E3D0的商店购买与出售限额。'
+store-status: '&#9FD9F6{player} &#B2C3CF的交易记录 · &f{status}'
+bag-title: '&#9FD9F6随身 Bag &7· &f{capacity} 格'
+bag-status-name: '&#9FD9F6{world} &7· {status}'
+bag-status-lore:
+  - '&f左键整组取放 · 右键单个取放'
+  - '&#B2C3CF点击下方自己的物品可存入'
+  - '&#B2C3CF点击上方物品可取出'
+  - '&#B2C3CF容量 · &f{capacity}'
+  - '&#B2C3CFLv.{level27} 解锁 27 格，Lv.{level36} 解锁 36 格'
+bag-state-writable: '&#B6E3D0可取放'
+bag-state-readonly: '&#FFE49A只读'
+bag-readonly: '&#FFE49A这里暂时只能看看 Bag 哦～ &f去生存一区或二区就可以正常取放啦。'
+bag-full: '&#FFE49ABag 放不下这一组了，先整理一点空位吧。'
+bag-corrupt: '&#EDB9CEBag 内容暂时无法读取，原始物品数据已保留，请联系管理员。'
+bag-sort-off: '&#9FD9F6整理模式 · 关闭'
+bag-sort-on: '&#B6E3D0整理模式 · 开启'
+bag-sort-lore: ['&f开启后，依次点击 Bag 内两个格子交换位置', '&#B2C3CF再次点击按钮回到取放模式']
+bag-sort-selected: '&#B2C3CF已选中第 &f{slot} &#B2C3CF格，再点击另一格就能交换。'
+bag-sort-stop-first: '&#B2C3CF先关闭整理模式，再把背包物品存进来吧。'
+tpn-offline: '&#EDB9CE暂时找不到这位在线玩家，确认一下名字吧。'
+tpn-self: '&#B2C3CF你已经在自己身边啦，试试另一位玩家的名字。'
+tpn-unavailable: '&#FFE49A这次暂时无法传送，等双方都准备好再试吧。'
+tpn-pending: '&#FFE49A你或对方还有一个传送请求，先处理完这一份吧。'
+tpn-cooldown: '&#FFE49A传送还需要休息 {seconds}秒。'
+tpn-sent: '&f请求已经送给 &#9FD9F6{target} &f啦～ &#B2C3CF等对方在 {seconds}秒内回应一下吧 (｡･ω･｡)'
+tpn-received: |-
+  &#9FD9F6{player} &f想来到你身边
+  &#B6E3D0/yes 接受 &#B2C3CF· &#EDB9CE/no 拒绝 &#B2C3CF· {seconds}秒内有效
+tpn-no-request: '&#B2C3CF现在没有等待你回应的传送请求。'
+tpn-expired: '&#B2C3CF{player} → {target} 的传送请求已过期。'
+tpn-declined: '&#B2C3CF{player} → {target} 的传送请求已婉拒。'
+tpn-accepted: '&#B6E3D0已接受请求，正在为 {player} 找一个落脚处。'
+tpn-loading: '&#B2C3CF{target} 已接受，正在准备安全落点。'
+tpn-load-timeout: '&#FFE49A这次准备得有些久，传送已取消，可以稍后重试。'
+tpn-unsafe: '&#FFE49A对方附近暂时没有安全的落脚处，换个平坦位置再试吧。'
+tpn-cancelled: '&#FFE49A这次传送受到限制，没有消耗冷却时间。'
+tpn-success-from: '&#B6E3D0已来到 &f{target} &#B6E3D0接受请求时的位置附近。'
+tpn-success-to: '&#B6E3D0{player} &f已经抵达你的身边啦。'
+tpn-player-left: '&#B2C3CF有一方离线了，这次传送请求已取消。'
+tpn-reloaded: '&#B2C3CF配置正在更新，这次传送请求已取消。'
+afk-pool:
+  title: '&#D7C9EC你正在挂机～'
+  subtitle: '&#DCE8EE下一份奖励 · &#D7C9EC{time}'
+  reward-exp: '&#DCE8EE收到 &#D7C9EC{exp} EXP &#DCE8EE啦～'
+  reward-exp-coins: '&#D7C9EC{exp} EXP &#DCE8EE· &#FFE49A+{coins} 金币 ✦'
+  coin-messages:
+    - '&#FFE49A✦ 水里好像闪了一下……捞到了 {coins} 枚金币～ &#B2C3CF余额 · &f{balance}'
+    - '&#FFE49A✦ 今天的水池有点大方呢～ +{coins} 金币 &#B2C3CF· 余额 &f{balance}'
+    - '&#FFE49A✦ 嘿嘿，发现 {coins} 枚金币 (｡･ω･｡) &#B2C3CF· 余额 &f{balance}'
+    - '&#FFE49A✦ 悄悄收下 {coins} 枚金币～ &#B2C3CF小金库 · &f{balance}'
+enchant-names:
+  protection: 保护
+  fire_protection: 火焰保护
+  feather_falling: 摔落缓冲
+  blast_protection: 爆炸保护
+  projectile_protection: 弹射物保护
+  respiration: 水下呼吸
+  aqua_affinity: 水下速掘
+  thorns: 荆棘
+  depth_strider: 深海探索者
+  frost_walker: 冰霜行者
+  sharpness: 锋利
+  smite: 亡灵杀手
+  bane_of_arthropods: 节肢杀手
+  knockback: 击退
+  fire_aspect: 火焰附加
+  looting: 抢夺
+  sweeping_edge: 横扫之刃
+  efficiency: 效率
+  silk_touch: 精准采集
+  unbreaking: 耐久
+  fortune: 时运
+  power: 力量
+  punch: 冲击
+  flame: 火矢
+  infinity: 无限
+  luck_of_the_sea: 海之眷顾
+  lure: 饵钓
+  loyalty: 忠诚
+  impaling: 穿刺
+  riptide: 激流
+  channeling: 引雷
+  multishot: 多重射击
+  quick_charge: 快速装填
+  piercing: 穿透
+  mending: 经验修补
+  soul_speed: 灵魂疾行
+  swift_sneak: 迅捷潜行
+  density: 致密
+  breach: 破甲
+  wind_burst: 风爆
+usage:
+  menu: '&#B2C3CF输入 &#9FD9F6/menu &f打开服务器面板'
+  coins: '&#B2C3CF输入 &#9FD9F6/coins &f看看自己的金币'
+  checkin: '&#B2C3CF输入 &#9FD9F6/checkin &f领取今日小礼物'
+  sethome: '&#B2C3CF输入 &#9FD9F6/sethome &f记下当前世界的小窝'
+  home: '&f输入 &#9FD9F6/home &f回当前世界，也可以用 &#9FD9F6/home <worldName> &f回指定世界。'
+  check: '&#B2C3CF输入 &#9FD9F6/check home <worldName> &f查看小窝坐标'
+  store: '&#B2C3CF输入 &#9FD9F6/store &f逛逛日常商店'
+  bag: '&#B2C3CF输入 &#9FD9F6/bag &f打开随身背包'
+  tpn: '&#B2C3CF输入 &#9FD9F6/tpn <玩家名> &f请求来到对方身边'
+  'yes': '&#B2C3CF输入 &#B6E3D0/yes &f接受请求'
+  'no': '&#B2C3CF输入 &#EDB9CE/no &f婉拒请求'
+  admin: |-
+    &#9FD9F6管理命令 &f· /nekocore
+    &#B2C3CFcoins add|set|take <player|UUID> <amount> · exp add|set <player|UUID> <amount>
+    &#B2C3CFcleanup now · reload · levelshop open <player>
+    &#B2C3CFconfig check · status（doctor 同义）
+    &#B2C3CFstore refresh-enchants · store reset|status <player|UUID>
+    &#B2C3CFtasks status · tasks reroll confirm · tasks reset <player>
+    &#B2C3CFtasks progress <player> <taskId> <amount>

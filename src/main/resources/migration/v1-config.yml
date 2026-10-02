@@ -1,4 +1,4 @@
-# NekoCore · Momo Land
+# NekoCore · {server}
 # /nekocore reload 重载。数据库文件名修改后需要完整重启服务器。
 database:
   filename: nekocore.db
@@ -28,7 +28,7 @@ cleanup:
     pitch: 1.6
 
 gui:
-  title: '&8Momo Land &7· &d服务器面板'
+  title: '&8{server} &7· &d服务器面板'
   rows: 3
   # 槽位从 0 开始；四个功能槽位必须不同且在 GUI 范围内。
   filler:

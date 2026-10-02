@@ -10,6 +10,24 @@
 
 ---
 
+## 最常改的 5 件事
+
+新手 90% 的需求就是这几条。**改完都跑 `/nekocore config check` 再 `/nekocore reload`。**
+
+| 我想改 | 改哪个字段 | 详细说明 |
+|---|---|---|
+| 服务器名字 | `branding.server-name` | 见下面「branding」 |
+| 主世界叫什么 | `survival.world` | 见下面「世界与菜单入口」 |
+| 签到奖励 | `checkin.coins` / `checkin.exp` | 见下面「checkin」 |
+| 商店某件商品的价格 | `store.products.<id>.price` | 见下面「store」 |
+| 任务奖励 | `daily-tasks.rewards` | 见下面「daily-tasks」 |
+
+**下面每一块都可以点开。** 点标题展开该模块的行为说明和完整字段表；不展开就是一份目录。
+
+只想知道"改哪几行"的话，[配方手册](RECIPES.md)比这一页快得多。
+
+---
+
 ## 开始之前
 
 ### 两个文件
@@ -19,7 +37,7 @@
 | `plugins/NekoCore/config.yml` | 服务器行为。世界观、经济数值、菜单布局、模块开关 |
 | `plugins/NekoCore/messages.yml` | 所有玩家能看到的文字 |
 
-两个文件都有 `-version` 字段（`config-version: 8`、`messages-version: 7`）。**这两个数字不要动。** 它们决定插件怎么读你的文件，改它们不会修好任何问题。
+两个文件都有 `-version` 字段（`config-version: 9`、`messages-version: 8`）。**这两个数字不要动。** 它们决定插件怎么读你的文件，改它们不会修好任何问题。
 
 ### 编辑规则
 
@@ -31,6 +49,14 @@ YAML 用**空格缩进**表达层级：
 - 值里含 `#`、`:` 或者颜色代码时加引号。
 
 ### 改完的流程
+
+检查、启动和重载共用同一验证入口。常见物品 / 生物拼写错误和消息类型错误会尽量一起列出，独立加载器也分别检查；一次最多显示 20 项并说明总数。复杂范围或交叉字段规则仍可能只报告该模块的第一项，修完后再检查。
+
+错误说明文件、配置路径、游戏用途、当前值和校验规则。`Material` 指 Minecraft 物品 / 方块英文类型，`EntityType` 指生物英文类型。可靠定位时显示原文件行号；别名、合并键、重复键、特殊键名或无法解析的 YAML 不猜行号，改用路径和附近用途说明。没有相近名称时不编造修复值。
+
+例如面包商品的 `material: bred` 会建议在原字段改成 `material: BREAD`。不知道英文名？管理员拿着物品输入 `/nekocore lookup`，或查询 `/nekocore lookup bread`。列表只替换坏项，保留其他正确项。
+
+三个完整场景配置见[预设说明](PRESETS.md)。它们不自动应用；已有配置表与折叠章节仍是详细参考。
 
 ```text
 /nekocore config check     ← 只验证，不应用
@@ -67,7 +93,10 @@ YAML 用**空格缩进**表达层级：
 
 ---
 
-## branding —— 服务器名字
+<a id="branding--服务器名字"></a>
+<details>
+<summary><b>branding —— 服务器名字</b><br><sub>服务器名，会出现在 TAB、欢迎标题、GUI 标题、Tips 里</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -94,9 +123,14 @@ branding:
 
 **什么时候需要重启：** 不需要，`reload` 就够。
 
+</details>
+
 ---
 
-## 世界与菜单入口
+<a id="世界与菜单入口"></a>
+<details>
+<summary><b>世界与菜单入口</b><br><sub>`/menu` 上每个入口指向哪个世界；关掉的入口会自动隐藏</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -219,9 +253,14 @@ gui:
 
 **依赖命令路由的额外世界**就需要装 Multiverse 了。
 
+</details>
+
 ---
 
-## database —— 数据存储
+<a id="database--数据存储"></a>
+<details>
+<summary><b>database —— 数据存储</b><br><sub>数据存哪个文件、多久落盘一次</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -250,9 +289,14 @@ database:
 
 配置 `filename` 的时候不要写路径分隔符，它只能是插件目录内的文件名。
 
+</details>
+
 ---
 
-## home —— 小窝
+<a id="home--小窝"></a>
+<details>
+<summary><b>home —— 小窝</b><br><sub>玩家的小窝，按世界分别保存；睡床自动记 Home</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -295,9 +339,14 @@ home:
 
 **常见错误：** 世界名大小写不一致。`World` 和 `world` 在 Paper 眼里是两个东西。列表为空、或者 `enabled: false` 的时候，这个功能就完全不动作。
 
+</details>
+
 ---
 
-## checkin —— 每日签到
+<a id="checkin--每日签到"></a>
+<details>
+<summary><b>checkin —— 每日签到</b><br><sub>每天一次的金币和经验，时区决定几点换日</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -366,9 +415,14 @@ checkin:
 
 **出错的情况：** 负数奖励、非法时区名、错误的 sound 名称都会让整次重载失败。
 
+</details>
+
 ---
 
-## daily-tasks —— 每日任务
+<a id="daily-tasks--每日任务"></a>
+<details>
+<summary><b>daily-tasks —— 每日任务</b><br><sub>每天抽几个任务、给多少奖励、任务池怎么配</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -426,9 +480,14 @@ daily-tasks:
 
 **改时区或任务池的时机：** 这类改动会影响下一轮的选择。运营中改建议在**换日前停服修改，并先备份**。
 
+</details>
+
 ---
 
-## store —— 商店
+<a id="store--商店"></a>
+<details>
+<summary><b>store —— 商店</b><br><sub>109 件商品、价格、每日买卖限额、每日附魔书</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -563,9 +622,14 @@ store:
 
 **换批次：** 正常运营不需要干预，每天 04:00 自动换。想立刻换用 `/nekocore store refresh-enchants`，同时会重置本期购买次数。
 
+</details>
+
 ---
 
-## bag —— 随身仓库
+<a id="bag--随身仓库"></a>
+<details>
+<summary><b>bag —— 随身仓库</b><br><sub>随身仓库：哪些世界能取放、几级解锁几格</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -648,9 +712,14 @@ Bag 的**容量计算是独立硬编码**的，只认两个阈值：
 
 **这个组合不在自动测试的保证范围内**，值得在测试服验证跨世界切换、死亡、断线和满背包这几个场景。
 
+</details>
+
 ---
 
-## tpn —— 传送请求
+<a id="tpn--传送请求"></a>
+<details>
+<summary><b>tpn —— 传送请求</b><br><sub>传送请求的过期时间与冷却</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -694,9 +763,14 @@ tpn:
 
 **是否需要重启：** 不需要，`reload`。
 
+</details>
+
 ---
 
-## leveling —— 等级曲线
+<a id="leveling--等级曲线"></a>
+<details>
+<summary><b>leveling —— 等级曲线</b><br><sub>升级曲线怎么算，多少级升到下一级</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -739,9 +813,14 @@ leveling:
 
 **注意：** 改曲线**不会**让玩家掉级或者涨级——它只影响下一次升级需要多少经验。
 
+</details>
+
 ---
 
-## levelshop —— 头衔
+<a id="levelshop--头衔"></a>
+<details>
+<summary><b>levelshop —— 头衔</b><br><sub>三个头衔的价格、前缀和附带权益</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -814,9 +893,16 @@ levelshop:
 
 **改 `description` 记得同步。** 详情页里写的"传送冷却 120 秒"是你手写的文字，改了 `tpn-cooldown-seconds` 之后它不会自动更新——玩家看到的就是不一致的信息。
 
+</details>
+
 ---
 
-## tab / nametag / chat / welcome-title —— 显示层
+<a id="tab--nametag--chat--welcome-title--显示层"></a>
+<details>
+<summary><b>tab / nametag / chat / welcome-title —— 显示层</b><br><sub>TAB、头顶名字、聊天前缀、进服欢迎标题</sub></summary>
+
+
+Public 1.1 的默认 TAB 只保留居中的 `{server}` 标题、简洁留白/纯分隔线和紧凑 Footer，不加副标题或多余栏目标签。XYZ、TPS、地区前缀、头衔/等级、玩家名、在线人数、金币、时间、运行时长均保留。地区只读 session cache；关闭后的显示归属恢复保护不变。管理员已有的 TAB 文案在升级时保留。
 
 这一组放在一起讲，因为它们的关系比较微妙。
 
@@ -892,13 +978,52 @@ chat:
 
 **如果 NameTag 没生效：** 看日志里有没有"该 scoreboard team 已由其他插件管理"的提示。这说明另一个插件（通常是计分板或前缀插件）已经接管了 team，NekoCore 主动让位了。解决办法是用 PlaceholderAPI 集成，而不是强行竞争。
 
+</details>
+
 ---
 
-## tips / cleanup —— 氛围与维护
+<a id="join-info--进服个人信息"></a>
+<details>
+<summary><b>join-info —— 进服个人信息</b><br><sub>进服后延迟发给本人的一条个人信息</sub></summary>
+
+
+JoinInfo 是**只发送给进服玩家本人的聊天信息块**，在玩家缓存资料准备好之后延迟发送。它不替代欢迎标题、TAB 或全息字。
+
+| 字段 | 类型 / 默认 | 说明 |
+| --- | --- | --- |
+| `join-info.enabled` | boolean / `true` | 个人聊天信息总开关 |
+| `join-info.delay-ticks` | 整数 / `30` | 资料准备好后的延迟；允许 0–1200 ticks |
+| `join-info.links.docs/website/community/discord` | 字符串 / `""` | 管理员自行填写的 HTTP(S) 地址 |
+
+```yaml
+join-info:
+  enabled: true
+  delay-ticks: 30
+  links:
+    docs: ""
+    website: ""
+    community: ""
+    discord: ""
+```
+
+在**服务器机器**的 `plugins/NekoCore/config.yml` 中编辑。确实有自己的入口时再填真实地址；空值会完全隐藏，不显示空按钮、N/A 或假链接。玩家看到的文字、按钮名和悬停说明在 `messages.yml` 的 `join-info` 中。
+
+按钮只使用 Adventure **OPEN_URL**，不执行服务器命令。只接受带主机名、不含凭据和空白的 HTTP(S) 地址。`{player}`、`{server}`、`{playtime}`、`{level}`、`{coins}` 使用已准备好的缓存，不查询 SQLite、不重复查询 GeoIP。
+
+修改后先运行 `/nekocore config check`，再 `/nekocore reload`。重载、退出、停服都会取消待发送信息；下一次进服使用新配置。用玩家重新进服验证即可，重载不会向全服补发。
+
+</details>
+
+---
+
+<a id="tips--cleanup--氛围与维护"></a>
+<details>
+<summary><b>tips / cleanup —— 氛围与维护</b><br><sub>周期性提示语，和地面掉落物清理</sub></summary>
+
 
 ### 这两个功能实际做什么
 
-**Tips** 每隔一段时间在聊天栏播报一条提示，循环轮播。默认每 5 分钟一条，末尾之后回到第一条。重载之后从第一条重新计时。
+**Tips** 每隔一段时间在聊天栏播报一条提示，循环轮播。默认每 3 分钟一条，末尾之后回到第一条。重载之后从第一条重新计时。
 
 默认的 Tips 内容覆盖了新手需要知道的东西：`/menu` 在哪、床可以当 Home、怎么签到、商店怎么用、`/tpn` 怎么发请求。
 
@@ -909,7 +1034,7 @@ chat:
 | 字段 | 类型 / 默认 | 说明 |
 | --- | --- | --- |
 | `tips.enabled` | boolean / `true` | 总开关 |
-| `tips.interval-seconds` | 整数 / `300` | 播报间隔 |
+| `tips.interval-seconds` | 整数 / `180` | 播报间隔 |
 | `tips.prefix` | 文本 | 每条 Tips 的前缀 |
 | `tips.messages` | 文本列表 | 播报内容，支持 `{server}` |
 | `cleanup.enabled` | boolean / `true` | 总开关 |
@@ -921,7 +1046,7 @@ chat:
 ```yaml
 tips:
   enabled: true
-  interval-seconds: 300
+  interval-seconds: 180
   prefix: '&#9FD9F6tips &f>> '
   messages:
     - '&f欢迎来到 &#9FD9F6{server}&f！输入 &#9FD9F6/menu &f打开服务器面板。'
@@ -948,7 +1073,7 @@ cleanup:
     pitch: 1.6
 ```
 
-**改了哪一行：** `interval-seconds` 从 600 改成 300（10 分钟变 5 分钟）。
+**改了哪一行：** `interval-seconds` 从 600 改成 180（10 分钟变 3 分钟）。
 
 **什么时候该改：** 如果你的服务器掉落物堆积很快（刷怪塔多、玩家多），缩短间隔有帮助。但**清理太频繁会打断正在整理箱子的玩家**——10 分钟是个比较舒服的位置。
 
@@ -956,7 +1081,16 @@ cleanup:
 
 ---
 
-## AFK Pool —— 挂机池
+Tips 默认每 180 秒只播一条并循环；新增 `/tasks` 提示。关闭 `daily-tasks.enabled` 后，会跳过含 `/tasks` 的提示，不增加广播条数。
+
+</details>
+
+---
+
+<a id="afk-pool--挂机池"></a>
+<details>
+<summary><b>AFK Pool —— 挂机池</b><br><sub>挂机池：在哪、多久给一次奖励、给多少</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -1004,7 +1138,8 @@ cleanup:
 | `afk-pool.teleport.x/y/z` | 数值 | 目的坐标 |
 | `afk-pool.teleport.yaw/pitch` | 数值 | 到达时的朝向 |
 | `afk-pool.exit-grace-seconds` | 整数 / `2` | 离水宽限 |
-| `afk-pool.reward.interval-seconds` | 整数 / `300` | 奖励间隔 |
+| `afk-pool.reward.interval-seconds` | 整数 / `60` | 奖励间隔 |
+| `afk-pool.end-message-enabled` | boolean / `true` | 正常结束时向本人发送时长 |
 | `afk-pool.reward.base-exp` | 整数 / `10` | 每次的基础经验 |
 | `afk-pool.reward.normal-multiplier` | 数值 / `1.10` | 基础倍率 |
 | `afk-pool.reward.coin-chance` | 0–1 / `0.45` | 给金币的概率 |
@@ -1029,7 +1164,7 @@ afk-pool:
     pitch: 0.0
   exit-grace-seconds: 2
   reward:
-    interval-seconds: 300
+    interval-seconds: 60
     base-exp: 10
     normal-multiplier: 1.10
     coin-chance: 0.45
@@ -1054,15 +1189,28 @@ afk-pool:
 
 ### 关于奖励节奏
 
-默认 `interval-seconds: 300` 是 5 分钟一次，每次 10 点基础经验 × 1.10 ≈ 11 点，加上 45% 概率给 1–4 金币。
+默认 `interval-seconds: 60` 是 1 分钟一次，每次 10 点基础经验 × 1.10 ≈ 11 点，加上 45% 概率给 1–4 金币。
 
-**换算一下：** 挂机一小时大约 132 点经验、约 67 金币。对照签到一天 100 金币——挂机收益是有的，但**不会比正常玩法更划算**。
+**换算一下：** 连续挂机一小时最多约 60 次结算，按上述默认参数约 660 点经验、金币期望值 67.5。金币随机发放，中断会减少结算次数；启用前请对照自己服务器的正常玩法收益。
 
 这个平衡是刻意的。如果挂机比打怪赚钱，玩家就会挂机而不是玩。想调的时候先算一下你的挂机收益和正常玩法的收益比例。
 
 ---
 
-## weekly-coin-leaderboard —— 金币周榜
+### 结算与会话结束不是同一个计时器
+
+60 秒只决定奖励尝试间隔。水池判定仍每 5 ticks 检查一次，离水宽限仍默认 2 秒，奖励池、概率和倍率不变。`afk-pool.reward.interval-seconds` 必须为 1–31536000 的整数；非法值记录警告并安全回退到 60 秒。
+
+宽限内返回水中继续同一会话，不发送结束消息。正式离水、换世界或死亡等正常结束，在线玩家只收到一次 `messages.yml → afk-pool.end-message`，其中 `{duration}` 例如 `42秒`、`3分18秒`、`1小时12分05秒`，不显示毫秒。时长从本次会话开始算起，包括会话内宽限时间。退出、插件重载、关闭、服务器停服只清理，不误发结束聊天。设 `end-message-enabled: false` 可关闭这条消息。AFK 默认仍关闭。
+
+</details>
+
+---
+
+<a id="weekly-coin-leaderboard--金币周榜"></a>
+<details>
+<summary><b>weekly-coin-leaderboard —— 金币周榜</b><br><sub>金币周榜悬浮牌的位置与刷新</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -1087,6 +1235,7 @@ afk-pool:
 | `weekly-coin-leaderboard.world` | 世界名 / `world` | 目标世界 |
 | `weekly-coin-leaderboard.x/y/z` | 数值 | 坐标 |
 | `weekly-coin-leaderboard.yaw` | 数值 / `0.0` | 朝向 |
+| `weekly-coin-leaderboard.billboard` | 枚举 / `FIXED` | `FIXED` 固定朝向；`CENTER` 跟随视线 |
 | `weekly-coin-leaderboard.refresh-seconds` | 整数 / `30` | 刷新间隔 |
 
 榜单的**文字内容**在 `messages.yml` 的 `weekly-coins` 里（第一、二、三名有独立的颜色）。
@@ -1102,6 +1251,7 @@ weekly-coin-leaderboard:
   y: 70.0
   z: -5.5
   yaw: 180.0
+  billboard: FIXED
   refresh-seconds: 30
 ```
 
@@ -1117,7 +1267,16 @@ weekly-coin-leaderboard:
 
 ---
 
-## mascot —— 吉祥物
+排行榜默认采用 `FIXED`，所以 `yaw` 真正决定牌子朝向。选 `CENTER` 时牌子面向观看者，不能用它验证固定朝向。刷新复用原有 TextDisplay；重载先清理自己拥有的显示再重建，不留下重复实体。PDC 清理、时区、Top N 和周收入统计保持不变；这不是把所有全息字全局改成 FIXED。
+
+</details>
+
+---
+
+<a id="mascot--吉祥物"></a>
+<details>
+<summary><b>mascot —— 吉祥物</b><br><sub>Citizens NPC 的互动：右键说话、粒子、全息字</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -1149,7 +1308,7 @@ weekly-coin-leaderboard:
 | `mascot.npc-id` | 整数 / `-1` | Citizens NPC 的编号 |
 | `mascot.hologram-enabled` | boolean / `true` | 头顶全息字 |
 | `mascot.hologram-lines` | 文本列表 | 全息字内容，支持 `{server}` |
-| `mascot.hologram-y-offset` | 数值 / `2.85` | 全息字的垂直偏移 |
+| `mascot.hologram-y-offset` | 数值 / `2.25` | 全息字的垂直偏移 |
 | `mascot.interaction-window-seconds` | 整数 / `15` | 点击计数的窗口长度 |
 | `mascot.normal-click-limit` | 整数 / `5` | 窗口内允许的正常点击数 |
 | `mascot.over-limit-chat-cooldown-seconds` | 整数 / `2` | 超限后的对话冷却 |
@@ -1168,7 +1327,7 @@ mascot:
   hologram-lines:
     - '&#9FD9F6✦ {server} Mascot ✦'
     - '&#B2C3CF右键和我打招呼'
-  hologram-y-offset: 2.85
+  hologram-y-offset: 2.25
   interaction-window-seconds: 15
   normal-click-limit: 5
   over-limit-chat-cooldown-seconds: 2
@@ -1184,13 +1343,22 @@ mascot:
 
 **是否需要重启：** **需要完整重启**——Citizens 是新增插件，reload 覆盖不到。
 
-**`hologram-y-offset` 怎么调：** 全息字相对 NPC 头顶往上偏移多少格。默认 2.85 适合大多数玩家模型的 NPC。如果你的 NPC 特别高或者特别矮，微调这个值。
+**`hologram-y-offset` 怎么调：** 整个全息字块相对 NPC 位置的高度，单位为格。先用默认 2.25，再按自己的 NPC 实际显示微调；不要用改行距来修正整体高度。
 
 **旧配置的兼容：** 旧版本用的键是 `citizens-npc-id`，仍然被兼容读取。新配置请用 `npc-id`。
 
 ---
 
-## location-prefix —— 网络地区（GeoIP）
+`hologram-y-offset` 平移的是整个全息文字块，默认从 2.85 调整为 2.25，不改变行距。它相对 NPC 的位置计算，而不是额外抬高 NPC 头顶。NPC 的位置、名字、皮肤始终不变；Mascot 仍用 `CENTER`。关闭模块或缺少 Citizens 时不注册 Mascot 监听器和刷新任务。
+
+</details>
+
+---
+
+<a id="location-prefix--网络地区geoip"></a>
+<details>
+<summary><b>location-prefix —— 网络地区（GeoIP）</b><br><sub>玩家地区显示（需要 GeoIP 数据文件）</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -1244,9 +1412,14 @@ tab:
 
 完整的安装流程、隐私模型和排查步骤见 [GeoIP 文档](GEOIP.md)。
 
+</details>
+
 ---
 
-## holograms —— 全息字全局设置
+<a id="holograms--全息字全局设置"></a>
+<details>
+<summary><b>holograms —— 全息字全局设置</b><br><sub>全息字的宽度和阴影</sub></summary>
+
 
 ### 这个功能实际做什么
 
@@ -1273,9 +1446,14 @@ holograms:
 
 **是否需要重启：** 不需要，`reload`。
 
+</details>
+
 ---
 
-## advanced —— 排障开关
+<a id="advanced--排障开关"></a>
+<details>
+<summary><b>advanced —— 排障开关</b><br><sub>排障用的调试开关，平时别开</sub></summary>
+
 
 ### 字段
 
@@ -1299,6 +1477,8 @@ advanced:
 **⚠ 排查完记得关回去。**
 
 **是否需要重启：** 不需要，`reload`。
+
+</details>
 
 ---
 

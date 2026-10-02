@@ -36,6 +36,8 @@ public final class MascotService implements Listener {
     }
     public void restart() {
         stop(); if (!plugin.settings().mascot().enabled()) return;
+        if (!Bukkit.getPluginManager().isPluginEnabled("Citizens")) return;
+        Bukkit.getPluginManager().registerEvents(this, plugin);
         reconcile();
         reconcileTask = Bukkit.getScheduler().runTaskTimer(plugin, this::reconcile, 100L, 100L);
     }
@@ -51,7 +53,7 @@ public final class MascotService implements Listener {
         Component title = Component.empty();
         for (String line : config.hologramLines()) {
             if (!title.equals(Component.empty())) title = title.append(Component.newline());
-            title = title.append(Messages.text(line, Map.of()).decoration(TextDecoration.STRIKETHROUGH, false));
+            title = title.append(Messages.text(line, Map.of("server", plugin.settings().serverName())).decoration(TextDecoration.STRIKETHROUGH, false));
         }
         plugin.holograms().show(HOLOGRAM_ID, npc.getLocation().add(0, config.hologramYOffset(), 0),
                 title);
@@ -89,6 +91,7 @@ public final class MascotService implements Listener {
     }
     public void quit(UUID player) { clicks.remove(player); }
     public void stop() {
+        HandlerList.unregisterAll(this);
         if (reconcileTask != null) { reconcileTask.cancel(); reconcileTask = null; }
         clicks.clear(); if (plugin.holograms() != null) plugin.holograms().remove(HOLOGRAM_ID);
     }

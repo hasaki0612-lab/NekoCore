@@ -139,8 +139,36 @@ class AfkPoolServiceTest {
         service.tick(List.of()); assertFalse(service.active(id));
     }
 
+    @Test void durationFormattingHasNoMilliseconds() {
+        assertEquals("42秒",AfkPoolService.duration(42));
+        assertEquals("3分18秒",AfkPoolService.duration(198));
+        assertEquals("1小时12分05秒",AfkPoolService.duration(4325));
+    }
+    @Test void graceReturnContinuesAndFormalEndSendsExactlyOnce() {
+        when(settings.afkPool()).thenReturn(config(10,60,2,false));
+        AfkPoolService service=new AfkPoolService(plugin,clock::get,()->1.0,(a,b)->a);
+        service.tick(List.of(player));clock.addAndGet(40_000_000_000L);
+        when(player.isInWater()).thenReturn(false);service.tick(List.of(player));
+        clock.addAndGet(1_000_000_000L);when(player.isInWater()).thenReturn(true);service.tick(List.of(player));
+        verify(plugin.messages(),never()).send(eq(player),eq("afk-pool.end-message"),anyMap());
+        when(player.isInWater()).thenReturn(false);service.tick(List.of(player));
+        clock.addAndGet(2_000_000_000L);service.tick(List.of(player));service.tick(List.of(player));
+        verify(plugin.messages(),times(1)).send(player,"afk-pool.end-message",Map.of("duration","43秒"));
+    }
+    @Test void onlineWorldChangeEndsOnceWhileQuitAndStopRemainSilent() {
+        when(settings.afkPool()).thenReturn(config(10,60,2,false));
+        AfkPoolService service=new AfkPoolService(plugin,clock::get,()->1.0,(a,b)->a);
+        service.tick(List.of(player));clock.addAndGet(5_000_000_000L);
+        PlayerChangedWorldEvent event=mock(PlayerChangedWorldEvent.class);when(event.getPlayer()).thenReturn(player);
+        service.world(event);service.world(event);
+        verify(plugin.messages(),times(1)).send(player,"afk-pool.end-message",Map.of("duration","5秒"));
+        clearInvocations(plugin.messages());
+        service.tick(List.of(player));PlayerQuitEvent quit=mock(PlayerQuitEvent.class);when(quit.getPlayer()).thenReturn(player);service.quit(quit);
+        service.tick(List.of(player));service.stop();service.stop();
+        verify(plugin.messages(),never()).send(eq(player),eq("afk-pool.end-message"),anyMap());
+    }
     private Settings.AfkPool config(long base,int interval,int grace,boolean title) {
-        return new Settings.AfkPool(true,new Settings.Destination("lobby",-10.5,54,33.5,180,0),grace,
-                new Settings.AfkReward(interval,base,1.10,0.45,1,4),new Settings.AfkTitle(title,true,40,10));
+        return new Settings.AfkPool(true,new Settings.Destination("lobby",0.5,64,0.5,0,0),grace,
+                new Settings.AfkReward(interval,base,1.10,0.45,1,4),new Settings.AfkTitle(title,true,40,10),true);
     }
 }

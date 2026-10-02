@@ -1,11 +1,14 @@
 name: NekoCore
-version: 1.0.0
+version: 1.2.0
 main: land.momo.nekocore.NekoCorePlugin
 api-version: '26.2'
 description: 面向小型 Paper 服务器的开箱即用、配置驱动基础架构。
 author: 秋山羽咲
 softdepend: [PlaceholderAPI, Multiverse-Core, Citizens]
 commands:
+  tasks:
+    description: 打开每日任务
+    usage: /tasks
   menu:
     description: 打开服务器面板
     usage: /menu
@@ -43,6 +46,8 @@ commands:
     description: NekoCore 管理命令
     usage: /nekocore
 permissions:
+  nekocore.tasks:
+    default: true
   nekocore.menu:
     default: true
   nekocore.coins:

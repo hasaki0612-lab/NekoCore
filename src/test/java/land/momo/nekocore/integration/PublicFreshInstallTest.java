@@ -30,8 +30,8 @@ class PublicFreshInstallTest {
 
         YamlConfiguration config = yaml(data.resolve("config.yml"));
         YamlConfiguration messages = yaml(data.resolve("messages.yml"));
-        assertEquals(8, config.getInt("config-version"));
-        assertEquals(7, messages.getInt("messages-version"));
+        assertEquals(9, config.getInt("config-version"));
+        assertEquals(8, messages.getInt("messages-version"));
         assertFalse(Files.exists(data.resolve("GeoLite2-City.mmdb")));
         for (String path : List.of("location-prefix.enabled", "survival-new.enabled", "minigames.enabled",
                 "afk-pool.enabled", "afk-pool.position-configured", "weekly-coin-leaderboard.enabled",

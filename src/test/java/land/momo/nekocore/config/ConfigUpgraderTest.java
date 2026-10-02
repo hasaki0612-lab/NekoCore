@@ -23,8 +23,8 @@ class ConfigUpgraderTest {
         copyOld(); String original = Files.readString(directory.resolve("messages.yml"));
         ConfigUpgrader.upgrade(directory);
         var config = read("config"); var messages = read("messages");
-        assertEquals(8, config.getInt("config-version")); assertEquals(7, messages.getInt("messages-version")); assertEquals(5, config.getInt("gui.rows"));
-        assertEquals(300, config.getInt("tips.interval-seconds")); assertEquals(100, config.getInt("checkin.coins"));
+        assertEquals(9, config.getInt("config-version")); assertEquals(8, messages.getInt("messages-version")); assertEquals(5, config.getInt("gui.rows"));
+        assertEquals(180, config.getInt("tips.interval-seconds")); assertEquals(100, config.getInt("checkin.coins"));
         assertEquals(50, config.getInt("checkin.exp")); assertEquals("world_secondary", config.getString("survival-new.world"));
         assertEquals(0.5, config.getDouble("minigames.x")); assertEquals(64, config.getDouble("minigames.y"));
         assertEquals(0.5, config.getDouble("minigames.z")); assertTrue(config.getBoolean("chat.level-prefix-enabled"));
@@ -82,7 +82,7 @@ class ConfigUpgraderTest {
         var messages = read("messages"); messages.set("prefix", "&#AABBCC自定义 "); messages.save(directory.resolve("messages.yml").toFile());
         byte[] original = Files.readAllBytes(directory.resolve("config.yml")); List<String> logs = new ArrayList<>();
         ConfigUpgrader.upgrade(directory, logs::add);
-        var next = read("config"); assertEquals(8, next.getInt("config-version"));
+        var next = read("config"); assertEquals(9, next.getInt("config-version"));
         assertEquals(137, next.getInt("checkin.coins")); assertFalse(next.getBoolean("home.bed-auto-set.enabled"));
         assertEquals("existing.db", next.getString("database.filename")); assertEquals(List.of("custom"), next.getStringList("tips.messages"));
         assertEquals(List.of("world"), next.getStringList("bag.writable-worlds"));
@@ -100,7 +100,7 @@ class ConfigUpgraderTest {
         for (String name : List.of("config", "messages")) originals.put(name, Files.readAllBytes(directory.resolve(name + ".yml")));
         ConfigUpgrader.upgrade(directory);
         var config = read("config");
-        assertEquals(8, config.getInt("config-version")); assertEquals(7, read("messages").getInt("messages-version"));
+        assertEquals(9, config.getInt("config-version")); assertEquals(8, read("messages").getInt("messages-version"));
         for (String key : List.of("survival.command", "survival-new.command")) assertEquals("mvtp {player} {world}", config.getString(key));
         assertTrue(config.getBoolean("home.bed-auto-set.enabled"));
         assertEquals(List.of("world"), config.getStringList("home.bed-auto-set.worlds"));
@@ -108,7 +108,7 @@ class ConfigUpgraderTest {
         assertTrue(read("messages").getString("usage.home").contains("<worldName>"));
         assertTrue(read("messages").contains("home-bed-saved"));
         for (String name : originals.keySet()) try (var files = Files.list(directory)) {
-            Path backup = files.filter(p -> p.getFileName().toString().startsWith(name + ".yml.pre-1.4.0-")).findFirst().orElseThrow();
+            Path backup = files.filter(p -> p.getFileName().toString().startsWith(name + ".yml.pre-public-1.1.0-")).findFirst().orElseThrow();
             assertArrayEquals(originals.get(name), Files.readAllBytes(backup));
         }
         assertArrayEquals(database, Files.readAllBytes(directory.resolve("nekocore.db")));
@@ -159,7 +159,7 @@ class ConfigUpgraderTest {
         var messages = read("messages"); messages.set("messages-version", 4); messages.set("home-success", "&#123456自定义欢迎");
         messages.save(directory.resolve("messages.yml").toFile());
         ConfigUpgrader.upgrade(directory); var next = read("config");
-        assertEquals(8, next.getInt("config-version")); assertEquals(7, read("messages").getInt("messages-version"));
+        assertEquals(9, next.getInt("config-version")); assertEquals(8, read("messages").getInt("messages-version"));
         assertEquals(1337, next.getInt("cleanup.interval-seconds")); assertEquals("自定义隐私按钮", next.getString("gui.items.privacy.name"));
         assertEquals(34, next.getInt("gui.items.minigames.slot")); assertNotEquals(34, next.getInt("gui.items.afk-pool.slot"));
         assertEquals(List.of("mame", "momo", "sora"), new ArrayList<>(next.getConfigurationSection("levelshop.titles").getKeys(false)));
@@ -170,7 +170,7 @@ class ConfigUpgraderTest {
         assertEquals(4800, next.getInt("store.products.diamond_chestplate.price"));
         assertEquals("&#123456自定义欢迎", read("messages").getString("home-success"));
         try (var files = Files.list(directory)) {
-            assertEquals(2, files.filter(path -> path.getFileName().toString().contains(".pre-1.4.0-")).count());
+            assertEquals(2, files.filter(path -> path.getFileName().toString().contains(".pre-public-1.1.0-")).count());
         }
     }
 
@@ -185,7 +185,7 @@ class ConfigUpgraderTest {
         var messages = read("messages"); messages.set("messages-version", 5); messages.set("title-menu-title", "&#123456自定义标题");
         messages.set("tab", null); messages.set("daily-tasks", null); messages.save(directory.resolve("messages.yml").toFile());
         ConfigUpgrader.upgrade(directory); var next = read("config"); var nextMessages = read("messages");
-        assertEquals(8, next.getInt("config-version")); assertEquals(7, nextMessages.getInt("messages-version"));
+        assertEquals(9, next.getInt("config-version")); assertEquals(8, nextMessages.getInt("messages-version"));
         assertEquals(1, next.getInt("afk-pool.reward.coin-min")); assertEquals(4, next.getInt("afk-pool.reward.coin-max"));
         assertEquals(List.of("管理员自己的提示"), next.getStringList("tips.messages"));
         assertTrue(next.getBoolean("daily-tasks.enabled")); assertTrue(next.getBoolean("tab.enabled"));
@@ -221,7 +221,7 @@ class ConfigUpgraderTest {
 
         ConfigUpgrader.upgrade(directory); var next = read("config"); var nextMessages = read("messages");
 
-        assertEquals(8, next.getInt("config-version")); assertEquals(7, nextMessages.getInt("messages-version"));
+        assertEquals(9, next.getInt("config-version")); assertEquals(8, nextMessages.getInt("messages-version"));
         assertFalse(next.getBoolean("tab.enabled")); assertEquals(7, next.getInt("tab.refresh-seconds"));
         assertFalse(next.getBoolean("location-prefix.show-china-province"));
         assertEquals(123, next.getInt("daily-tasks.rewards.easy.coins")); assertEquals(2, next.getInt("afk-pool.reward.coin-min"));
@@ -234,7 +234,7 @@ class ConfigUpgraderTest {
         assertTrue(nextMessages.contains("welcome-title.title")); assertEquals(16, nextMessages.getStringList("mascot.replies").size());
         try (var files = Files.list(directory)) {
             var names = files.map(path -> path.getFileName().toString()).filter(name -> name.endsWith(".bak")).toList();
-            assertEquals(2, names.size()); assertTrue(names.stream().allMatch(name -> name.contains(".pre-1.4.0-")));
+            assertEquals(2, names.size()); assertTrue(names.stream().allMatch(name -> name.contains(".pre-public-1.1.0-")));
         }
     }
 }

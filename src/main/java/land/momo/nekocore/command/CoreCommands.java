@@ -46,6 +46,7 @@ public final class CoreCommands implements CommandExecutor, TabCompleter {
         if (args.length != 0) { usage(sender, name); return true; }
         switch (name) {
             case "menu" -> plugin.menus().open(player);
+            case "tasks" -> plugin.dailyTaskMenu().open(player);
             case "coins" -> plugin.messages().send(player, "coins", plugin.variables(plugin.data().view(player.getUniqueId())));
             case "checkin" -> plugin.checkins().claim(player);
             case "sethome" -> setHome(player);
@@ -59,6 +60,7 @@ public final class CoreCommands implements CommandExecutor, TabCompleter {
     }
 
     private void admin(CommandSender sender, String[] args) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("lookup")) { lookup(sender, args); return; }
         if (args.length > 0 && args[0].equalsIgnoreCase("tasks")) { tasks(sender, args); return; }
         if (args.length == 1 && args[0].equalsIgnoreCase("reload")) { plugin.reload(sender); return; }
         if (args.length == 2 && args[0].equalsIgnoreCase("config") && args[1].equalsIgnoreCase("check")) {
@@ -109,6 +111,28 @@ public final class CoreCommands implements CommandExecutor, TabCompleter {
             plugin.finish(sender, plugin.store().experience(args[2], action, amount),
                     profile -> plugin.messages().send(sender, "exp-updated", plugin.variables(profile)));
         }
+    }
+
+    private void lookup(CommandSender sender, String[] args) {
+        boolean entity = args.length > 1 && args[1].equalsIgnoreCase("entity");
+        if (args.length == 1) {
+            if (!(sender instanceof Player player)) { plugin.messages().send(sender, "lookup.console"); return; }
+            var material = player.getInventory().getItemInMainHand().getType();
+            if (material.isAir()) { plugin.messages().send(sender, "lookup.empty-hand"); return; }
+            plugin.messages().send(sender, "lookup.held", Map.of("material", material.name()));
+            return;
+        }
+        if (args.length != (entity ? 3 : 2)) { plugin.messages().send(sender, "lookup.usage"); return; }
+        String keyword = args[entity ? 2 : 1];
+        if (!keyword.matches("(?i)(?:minecraft:)?[a-z0-9_]+")) { plugin.messages().send(sender, "lookup.english-only"); return; }
+        List<String> names = entity
+                ? Arrays.stream(org.bukkit.entity.EntityType.values()).map(Enum::name).toList()
+                : Arrays.stream(org.bukkit.Material.values()).filter(value -> !value.isLegacy() && !value.isAir() && (value.isItem() || value.isBlock())).map(Enum::name).toList();
+        List<String> results = land.momo.nekocore.config.LookupNames.search(keyword, names, 10);
+        if (results.isEmpty()) { plugin.messages().send(sender, "lookup.none", Map.of("keyword", keyword)); return; }
+        plugin.messages().send(sender, "lookup.results", Map.of("kind", entity ? "生物" : "物品 / 方块", "count", "" + results.size()));
+        for (String name : results) plugin.messages().send(sender, entity ? "lookup.entity-line" : "lookup.material-line", Map.of("name", name));
+        plugin.messages().send(sender, "lookup.copy", Map.of("kind", entity ? "entities 列表" : "material 字段"));
     }
 
     private void tasks(CommandSender sender, String[] args) {
@@ -243,6 +267,7 @@ public final class CoreCommands implements CommandExecutor, TabCompleter {
     private String permission(String name) {
         return switch (name) {
             case "menu" -> "nekocore.menu";
+            case "tasks" -> "nekocore.tasks";
             case "coins" -> "nekocore.coins";
             case "checkin" -> "nekocore.checkin";
             case "sethome" -> "nekocore.home.set";
@@ -270,12 +295,13 @@ public final class CoreCommands implements CommandExecutor, TabCompleter {
             if (args.length == 1) options.add("home");
             if (args.length == 2 && args[0].equalsIgnoreCase("home")) Bukkit.getWorlds().forEach(world -> options.add(world.getName()));
         } else if (name.equals("nekocore")) {
-            if (args.length == 1) options.addAll(List.of("coins", "exp", "cleanup", "reload", "config", "status", "doctor", "store", "levelshop", "tasks"));
+            if (args.length == 1) options.addAll(List.of("coins", "exp", "cleanup", "reload", "config", "status", "doctor", "store", "levelshop", "tasks", "lookup"));
             if (args.length == 2) options.addAll(switch (args[0].toLowerCase(Locale.ROOT)) {
                 case "coins" -> List.of("add", "set", "take");
                 case "exp" -> List.of("add", "set");
                 case "cleanup" -> List.of("now");
                 case "config" -> List.of("check");
+                case "lookup" -> List.of("entity");
                 case "levelshop" -> List.of("open");
                 case "store" -> List.of("refresh-enchants", "reset", "status");
                 case "tasks" -> List.of("status", "reroll", "reset", "progress");

@@ -6,6 +6,8 @@ import land.momo.nekocore.config.Settings;
 import land.momo.nekocore.config.ConfigUpgrader;
 import land.momo.nekocore.config.FeatureSettings;
 import land.momo.nekocore.config.DailyTaskSettings;
+import land.momo.nekocore.config.ConfigurationValidation;
+import land.momo.nekocore.config.FirstRunGuide;
 import land.momo.nekocore.data.TitleRepository;
 import land.momo.nekocore.data.CommerceRepository;
 import land.momo.nekocore.data.DailyTaskRepository;
@@ -41,6 +43,7 @@ import land.momo.nekocore.service.HologramService;
 import land.momo.nekocore.service.WeeklyCoinLeaderboardService;
 import land.momo.nekocore.service.MascotService;
 import land.momo.nekocore.service.JoinWelcomeService;
+import land.momo.nekocore.service.JoinInfoService;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -102,20 +105,25 @@ public final class NekoCorePlugin extends JavaPlugin implements Listener {
     private WeeklyCoinLeaderboardService weeklyLeaderboard;
     private MascotService mascot;
     private JoinWelcomeService welcome;
+    private JoinInfoService joinInfo;
     private CoreCommands commands;
     private NekoExpansion expansion;
     private BukkitTask saveTask;
 
     @Override public void onEnable() {
+        boolean generatedConfig = !new File(getDataFolder(), "config.yml").exists();
         try {
             saveDefaultConfig();
+            try { FirstRunGuide.installPresets(getDataFolder().toPath(), this::getResource); }
+            catch (java.io.IOException error) { getLogger().warning("预设文件未能复制；核心功能仍继续加载。请检查 presets 目录权限：" + error.getMessage()); }
             if (!new File(getDataFolder(), "messages.yml").exists()) saveResource("messages.yml", false);
             ConfigUpgrader.upgrade(getDataFolder().toPath(), getLogger()::info);
             LoadedConfiguration loaded = loadConfiguration();
             settings = loaded.settings(); features = loaded.features(); dailyTaskSettings = loaded.dailyTasks();
             messages = loaded.messages();
         } catch (Exception e) {
-            getLogger().log(Level.SEVERE, "配置无效，NekoCore 未启用。", e);
+            if (e instanceof ConfigurationValidation.Failure) getLogger().severe("配置无效，NekoCore 未启用。\n" + e.getMessage());
+            else getLogger().log(Level.SEVERE, "配置无效，NekoCore 未启用。", e);
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -153,9 +161,10 @@ public final class NekoCorePlugin extends JavaPlugin implements Listener {
         weeklyLeaderboard = new WeeklyCoinLeaderboardService(this, weeklyCoinRepository);
         mascot = new MascotService(this);
         welcome = new JoinWelcomeService(this);
+        joinInfo = new JoinInfoService(this);
         menus = new MenuService(this);
         commands = new CoreCommands(this);
-        for (String name : List.of("menu", "coins", "sethome", "home", "check", "checkin", "nekocore", "store", "bag", "tpn", "yes", "no")) {
+        for (String name : List.of("menu", "tasks", "coins", "sethome", "home", "check", "checkin", "nekocore", "store", "bag", "tpn", "yes", "no")) {
             var command = Objects.requireNonNull(getCommand(name));
             command.setExecutor(commands); command.setTabCompleter(commands);
         }
@@ -168,7 +177,6 @@ public final class NekoCorePlugin extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(teleportRequests, this);
         Bukkit.getPluginManager().registerEvents(afkPool, this);
         Bukkit.getPluginManager().registerEvents(dailyTasks, this);
-        Bukkit.getPluginManager().registerEvents(mascot, this);
         Bukkit.getPluginManager().registerEvents(new DeathLocationListener(this), this);
         Bukkit.getPluginManager().registerEvents(new LevelChatListener(this), this);
         Bukkit.getPluginManager().registerEvents(new BedHomeListener(this), this);
@@ -205,6 +213,7 @@ public final class NekoCorePlugin extends JavaPlugin implements Listener {
                             + ", Mascot=" + state(settings.mascot().enabled() && Bukkit.getPluginManager().isPluginEnabled("Citizens"))
                             + ", PlaceholderAPI=" + state(expansion != null));
                     getLogger().info("NekoCore " + getDescription().getVersion() + " ready");
+                    FirstRunGuide.show(generatedConfig, getLogger()::info);
                 }));
     }
 
@@ -223,6 +232,7 @@ public final class NekoCorePlugin extends JavaPlugin implements Listener {
                 if (!present(player)) return;
                 exchanges.recover(player, () -> {
                     featureReady.add(player.getUniqueId());
+                    joinInfo.show(player);
                     if (prefixes.autoCheckin(player)) checkins.claimAutomatic(player); else checkins.remind(player);
                 });
             }, 3L);
@@ -238,6 +248,7 @@ public final class NekoCorePlugin extends JavaPlugin implements Listener {
         if (locations != null) locations.quit(event.getPlayer().getUniqueId());
         if (tabPanel != null) tabPanel.quit(event.getPlayer().getUniqueId());
         if (mascot != null) mascot.quit(event.getPlayer().getUniqueId());
+        if (joinInfo != null) joinInfo.quit(event.getPlayer().getUniqueId());
         featureReady.remove(event.getPlayer().getUniqueId());
     }
 
@@ -262,6 +273,7 @@ public final class NekoCorePlugin extends JavaPlugin implements Listener {
         if (dailyTasks != null) dailyTasks.stop();
         if (weeklyLeaderboard != null) weeklyLeaderboard.stop();
         if (mascot != null) mascot.stop();
+        if (joinInfo != null) joinInfo.stop();
         if (holograms != null) holograms.stop();
         if (tabPanel != null) tabPanel.stop();
         if (menus != null) menus.closeAll();
@@ -320,6 +332,7 @@ public final class NekoCorePlugin extends JavaPlugin implements Listener {
             }
             settings = next; features = nextFeatures; dailyTaskSettings = nextDailyTasks; messages = nextMessages;
             menus.closeAll(); cleanup.restart(); tips.restart(); restartSaving(); nameTags.restart(); afkPool.restart(); dailyTasks.restart(); tabPanel.restart();
+            joinInfo.stop();
             weeklyLeaderboard.stop(); mascot.stop(); holograms.start(); weeklyLeaderboard.restart(); mascot.restart();
             featureGui.closeAll(); storeMenu.stop(); enchantments.restart();
             teleportRequests.stop();
@@ -330,13 +343,9 @@ public final class NekoCorePlugin extends JavaPlugin implements Listener {
 
     private LoadedConfiguration loadConfiguration() throws Exception {
         File config = new File(getDataFolder(), "config.yml");
-        Settings loadedSettings = Settings.load(config);
-        FeatureSettings loadedFeatures = FeatureSettings.load(config);
-        DailyTaskSettings loadedTasks = DailyTaskSettings.load(config);
-        EnchantmentService.validatePool(loadedFeatures.books());
-        Messages loadedMessages = Messages.load(new File(getDataFolder(), "messages.yml"), getResource("messages.yml"))
-                .globals(Map.of("server", loadedSettings.serverName()));
-        return new LoadedConfiguration(loadedSettings, loadedFeatures, loadedTasks, loadedMessages);
+        var loaded = ConfigurationValidation.load(config, new File(getDataFolder(), "messages.yml"),
+                getResource("messages.yml"), getLogger()::warning);
+        return new LoadedConfiguration(loaded.settings(), loaded.features(), loaded.dailyTasks(), loaded.messages());
     }
 
     public void checkConfig(CommandSender sender) {
@@ -367,6 +376,7 @@ public final class NekoCorePlugin extends JavaPlugin implements Listener {
                 "position missing or disabled"));
         lines.add(statusLine("PlaceholderAPI", expansion != null, "plugin not installed"));
         lines.forEach(line -> sender.sendMessage(Messages.text(line, Map.of())));
+        sender.sendMessage(Messages.text("&7说明：DISABLED 是可选功能关闭或未配置，不表示服务器出错；确认需要该功能后再配置。", Map.of()));
     }
 
     private static String statusLine(String name, boolean enabled, String reason) {

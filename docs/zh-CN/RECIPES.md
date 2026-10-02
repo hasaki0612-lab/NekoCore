@@ -31,6 +31,10 @@
 
 ## 玩家体验
 
+### 我想改图标，但不知道物品英文名
+
+管理员把物品拿在主手，输入 `/nekocore lookup`；没有物品就用 `/nekocore lookup bread` 之类的英文关键词。把输出的 `material: BREAD` 填回原按钮或商品字段，不新建第二个同名分组。先检查，再重载。查询不会替你写配置，中文名称不参与搜索。
+
 ### 我想改服务器名字
 
 ```yaml
@@ -59,7 +63,7 @@ welcome-title:
   fade-out-ticks: 10
 tips:
   enabled: true
-  interval-seconds: 300
+  interval-seconds: 180
   prefix: '&#9FD9F6tips &f>> '
   messages:
     - '&f欢迎来到 &#9FD9F6{server}&f！输入 &#9FD9F6/menu &f打开服务器面板。'
@@ -68,7 +72,7 @@ tips:
 
 改完 `reload`。
 
-**几个概念：** `ticks` 是 Minecraft 的时间单位，20 ticks = 1 秒。所以 `delay-ticks: 15` 是进服 0.75 秒后弹出标题，`stay-ticks: 60` 是停留 3 秒。`interval-seconds` 是 Tips 的间隔，默认 300 秒 = 5 分钟。
+**几个概念：** `ticks` 是 Minecraft 的时间单位，20 ticks = 1 秒。所以 `delay-ticks: 15` 是进服 0.75 秒后弹出标题，`stay-ticks: 60` 是停留 3 秒。`interval-seconds` 是 Tips 的间隔，默认 180 秒 = 3 分钟。
 
 Tips 是**每轮只播一条**，播完最后一条再回到第一条。重载之后会从第一条重新计时。
 
@@ -197,6 +201,12 @@ chat:
 已经用了 `%nekocore_display_prefix%` 的聊天插件必须关掉这一项，否则前缀会出现两次。
 
 ---
+
+### 进服聊天入口与任务快捷方式
+
+玩家输入 `/tasks` 即可打开现有每日任务界面，权限 `nekocore.tasks` 默认允许。关闭每日任务后，相关 Tips 会自动跳过。
+
+如果想让新玩家看到自己的服务器入口，在**服务器机器**编辑 `plugins/NekoCore/config.yml` 的 `join-info.links`：把需要的 docs / website / community / discord 填成自己的真实 HTTP(S) 地址，其他项留 `""`。不要照抄不属于你的地址。文案到 `messages.yml → join-info` 修改，先 `/nekocore config check`，再重载、重新进服验证。按钮只打开网址，不运行命令。详见[JoinInfo 配置](CONFIGURATION.md#join-info--进服个人信息)。
 
 ## 服务器结构
 
@@ -600,7 +610,7 @@ afk-pool:
     pitch: 0.0
   exit-grace-seconds: 2
   reward:
-    interval-seconds: 300
+    interval-seconds: 60
     base-exp: 10
     normal-multiplier: 1.10
     coin-chance: 0.45
@@ -625,7 +635,7 @@ afk-pool:
 
 **实际怎么工作：** 玩家点菜单入口被送到水池上方。真正开始计时是**进入水体之后**，不是落地就开始。中途短暂踩出水（比如跳起来换气）时，`exit-grace-seconds: 2` 给了 2 秒的宽限——2 秒内回到水里，倒计时继续；超过 2 秒就重置。
 
-奖励按 `interval-seconds` 节奏发放，默认每 300 秒（5 分钟）一次：固定 `base-exp` 经验，再乘 `normal-multiplier`；金币是按 `coin-chance` 概率给的，一次给 `coin-min` 到 `coin-max` 之间。
+奖励按 `interval-seconds` 节奏发放，默认每 60 秒（1 分钟）一次：固定 `base-exp` 经验，再乘 `normal-multiplier`；金币是按 `coin-chance` 概率给的，一次给 `coin-min` 到 `coin-max` 之间。
 
 **常见坑：**
 
@@ -685,7 +695,7 @@ mascot:
   hologram-lines:
     - '&#9FD9F6✦ {server} Mascot ✦'
     - '&#B2C3CF右键和我打招呼'
-  hologram-y-offset: 2.85
+  hologram-y-offset: 2.25
   interaction-window-seconds: 15
   normal-click-limit: 5
   over-limit-chat-cooldown-seconds: 2

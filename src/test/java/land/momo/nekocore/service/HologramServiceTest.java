@@ -41,8 +41,12 @@ class HologramServiceTest {
             verify(stale).remove(); verify(foreign,never()).remove();
             assertSame(display,service.show("weekly-coins",location,Component.text("one")));
             assertSame(display,service.show("weekly-coins",location,Component.text("two")));
+            verify(display,atLeastOnce()).setBillboard(Display.Billboard.CENTER);
+            Location turned=location.clone();turned.setYaw(90);
+            assertSame(display,service.show("weekly-coins",turned,Component.text("three"),Display.Billboard.FIXED));
+            verify(display).teleport(turned);verify(display).setBillboard(Display.Billboard.FIXED);
             verify(world,times(1)).spawn(same(location),eq(TextDisplay.class),org.mockito.ArgumentMatchers.<Consumer<TextDisplay>>any());
-            verify(display,times(2)).text(any(Component.class)); verify(display).setPersistent(false);
+            verify(display,times(3)).text(any(Component.class)); verify(display).setPersistent(false);
             service.stop(); verify(display).remove();
         }
     }

@@ -34,7 +34,7 @@ class SettingsTest {
             assertEquals("GeoLite2-City.mmdb", settings.locationPrefix().databaseFile()); assertFalse(settings.locationPrefix().enabled());
             assertFalse(settings.afkPool().enabled()); assertEquals("world", settings.afkPool().teleport().world()); assertEquals(0.5, settings.afkPool().teleport().x());
             assertEquals(64, settings.afkPool().teleport().y()); assertEquals(0.5, settings.afkPool().teleport().z());
-            assertEquals(0, settings.afkPool().teleport().yaw()); assertEquals(300, settings.afkPool().reward().interval());
+            assertEquals(0, settings.afkPool().teleport().yaw()); assertEquals(60, settings.afkPool().reward().interval());
             assertEquals(10, settings.afkPool().reward().baseExp()); assertEquals(1.10, settings.afkPool().reward().normalMultiplier());
             assertEquals(0.45, settings.afkPool().reward().coinChance(), 0.0001); assertEquals(1, settings.afkPool().reward().coinMin());
             assertEquals(4, settings.afkPool().reward().coinMax()); assertEquals(2, settings.afkPool().exitGrace());

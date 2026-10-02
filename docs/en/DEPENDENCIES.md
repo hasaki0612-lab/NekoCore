@@ -343,7 +343,7 @@ None of these **need to be installed on the server**, and the test libraries nev
 mvn -B clean verify
 ```
 
-The artifact is `target/NekoCore-1.0.0.jar`.
+The artifact is `target/NekoCore-1.2.0.jar`.
 
 ---
 

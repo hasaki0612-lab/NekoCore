@@ -47,7 +47,7 @@ The database holds:
 
 ## Versions and migrations
 
-`PRAGMA user_version` for Public 1.0.0 is **5**. Migrations V1 through V5 are retained:
+`PRAGMA user_version` for Public 1.2.0 is **5**. YAML changes from config 8 → 9 and messages 7 → 8 are independent of the database version. V1→V5, the single SQLite executor, cache-after-commit ordering, and Store / Bag pending / recovery / WAL behaviour remain unchanged; no V6 is added. Migrations V1 through V5 are retained:
 
 | Migration | Content |
 | --- | --- |
@@ -87,7 +87,9 @@ So each exchange is split into named stages (`BEFORE` → `UNCERTAIN` → `APPLI
 - evidence that they were not → a full rollback, with coins and store quotas restored;
 - **evidence that settles nothing** → the exchange is quarantined for manual reconciliation.
 
-The third case deserves its own explanation. When an exchange is genuinely undecidable — the inventory matches neither the "before" nor the "after" snapshot, which usually means another plugin has touched it — NekoCore refuses to guess, and the record is **quarantined, never replayed**. The log notes that the item record needs manual review and that nothing was re-sent or overwritten; the player is told that one item record needs reconciling and that their item data has been preserved. **Nothing is refunded, no items are granted, and a Multiverse world inventory is never overwritten.** The player is not banned and can play normally; what they cannot do is start another NekoCore exchange or open the store and Bag until the record has been reconciled. That trade is deliberate. When something is ambiguous, one feature going temporarily unavailable beats replaying an operation nobody can be certain about. [Economy, Store, Bag, and Titles](ECONOMY.md) describes the player-visible side of it.
+The third case deserves its own explanation. When an exchange is genuinely undecidable — the inventory matches neither the "before" nor the "after" snapshot, which usually means another plugin has touched it — NekoCore refuses to guess, and the record is **quarantined, never replayed**.
+
+The log notes that the item record needs manual review and that nothing was re-sent or overwritten; the player is told that one item record needs reconciling and that their item data has been preserved. **Nothing is refunded, no items are granted, and a Multiverse world inventory is never overwritten.** The player is not banned and can play normally; what they cannot do is start another NekoCore exchange or open the store and Bag until the record has been reconciled. That trade is deliberate. When something is ambiguous, one feature going temporarily unavailable beats replaying an operation nobody can be certain about. [Economy, Store, Bag, and Titles](ECONOMY.md) describes the player-visible side of it.
 
 This is also why **you should not edit the database tables by hand**. Those pending and transaction tables look like clutter from an older design, and they are precisely what the recovery logic reads. Emptying them by hand blinds the recovery mechanism.
 

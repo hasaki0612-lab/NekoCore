@@ -21,8 +21,14 @@ public final class TipsService {
     private void broadcastNext() {
         if (Bukkit.getOnlinePlayers().isEmpty()) return;
         var settings = plugin.settings().features().tips();
-        var text = settings.messages().get(index);
-        index = (index + 1) % settings.messages().size();
+        String text = null;
+        for (int visited = 0; visited < settings.messages().size(); visited++) {
+            var candidate = settings.messages().get(index);
+            index = (index + 1) % settings.messages().size();
+            if (candidate.contains("/tasks") && !plugin.dailyTaskSettings().enabled()) continue;
+            text = candidate; break;
+        }
+        if (text == null) return;
         Bukkit.broadcast(Messages.text(settings.prefix() + text,
                 Map.of("server", Objects.toString(plugin.settings().serverName(), "My Server"))));
     }

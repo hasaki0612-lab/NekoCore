@@ -51,7 +51,7 @@ public final class WeeklyCoinLeaderboardService {
             text = text.append(Component.newline()).append(Messages.text(plugin.messages().raw(key), Map.of(
                     "rank", "" + rank, "player", entry.name(), "coins", String.format(Locale.ROOT, "%,d", entry.earned()))));
         }
-        plugin.holograms().show(HOLOGRAM_ID, new Location(world, config.x(), config.y(), config.z(), config.yaw(), 0), text);
+        plugin.holograms().show(HOLOGRAM_ID, new Location(world, config.x(), config.y(), config.z(), config.yaw(), 0), text, config.billboard());
     }
     public void stop() {
         generation++; if (task != null) { task.cancel(); task = null; }

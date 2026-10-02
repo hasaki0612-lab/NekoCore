@@ -34,6 +34,18 @@ class CoreCommandsTest {
         commands.onCommand(sender, command, "nekocore", new String[]{"coins", "add", "Momo", "5"});
         verifyNoInteractions(store);
     }
+    @Test void tasksShortcutUsesExistingGuiAndItsOwnPermission() {
+        Player player=mock(Player.class); var gui=mock(land.momo.nekocore.gui.DailyTaskMenu.class);
+        when(plugin.dailyTaskMenu()).thenReturn(gui); when(command.getName()).thenReturn("tasks");
+        commands.onCommand(player,command,"tasks",new String[0]);
+        verify(plugin).permission(player,"nekocore.tasks"); verify(gui).open(player); verifyNoInteractions(store);
+    }
+    @Test void tasksPermissionAndDisabledLoadingStatePreventGuiDispatch() {
+        Player player=mock(Player.class); var gui=mock(land.momo.nekocore.gui.DailyTaskMenu.class);
+        when(plugin.dailyTaskMenu()).thenReturn(gui); when(command.getName()).thenReturn("tasks");
+        when(plugin.permission(player,"nekocore.tasks")).thenReturn(false);
+        commands.onCommand(player,command,"tasks",new String[0]); verifyNoInteractions(gui);
+    }
 
     @Test void invalidAmountsAndInvalidExpTakeAreRejectedBeforeStorage() {
         for (String value : new String[]{"-1", "1.2", "NaN", "+5", "9223372036854775808", "1;op"})

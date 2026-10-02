@@ -1,4 +1,4 @@
-# Momo Land · NekoCore 1.3.1。支持 & 颜色码与 &#RRGGBB；不解析 MiniMessage。
+# {server} · NekoCore 1.3.1。支持 & 颜色码与 &#RRGGBB；不解析 MiniMessage。
 messages-version: 6
 prefix: '&#9FD9F6[NekoCore] &r'
 no-permission: '&#EDB9CE这个功能暂时还不能使用。'
@@ -61,7 +61,7 @@ checkin-done: '&#B6E3D0已签到'
 checkin-loading: '&#B2C3CF读取中'
 tab:
   header: |-
-    &#61C8F2Momo Land &#A88BE8· 全局面板
+    &#61C8F2{server} &#A88BE8· 全局面板
     &#B2C3CF位置 · &fX {x}  Y {y}  Z {z}
     &#B2C3CFTPS · {tps_1m} &#B2C3CF· {tps_5m} &#B2C3CF· {tps_15m}
   footer: |-
@@ -70,7 +70,7 @@ tab:
     &#B2C3CF服务器运行 · &f{uptime}
 daily-tasks:
   disabled: '&#FFE49A今日任务暂时休息，稍后再来看看吧。'
-  gui-title: '&#61C8F2Momo Land &8· &#A88BE8每日任务'
+  gui-title: '&#61C8F2{server} &8· &#A88BE8每日任务'
   difficulty:
     easy: '&#9ED9C3简单'
     normal: '&#61C8F2普通'
@@ -121,7 +121,7 @@ daily-tasks:
       name: '&#9ED9C3减轻负重'
       description: ['&f亲手为 1 只羊剪毛']
     simple_good_morning:
-      name: '&#9ED9C3早安！Momo Land！'
+      name: '&#9ED9C3早安！{server}！'
       description: ['&f今天累计在线 20 分钟', '&#B2C3CF可以分几次完成，挂机也会计时']
     simple_crafting:
       name: '&#9ED9C3手工作业'
@@ -202,7 +202,7 @@ ui-back-lore: ['&#B2C3CF点击箭头返回']
 ui-empty-lore: []
 ui-previous: '&#9FD9F6上一页'
 ui-next: '&#9FD9F6下一页'
-title-menu-title: '&#55C7F3Momo Land &8· &#A786E8头衔小铺'
+title-menu-title: '&#55C7F3{server} &8· &#A786E8头衔小铺'
 title-detail-title: '&#A786E8{title} &8· &#55C7F3头衔详情'
 title-lobby-only: '&#FFE49A请回大厅找头衔 NPC，这里暂时不能打开头衔小铺。'
 title-item-name: '{title_prefix}'
@@ -222,7 +222,7 @@ title-purchased: |-
   &#B2C3CF花费 &#FFE49A{price} &#B2C3CF· 剩余金币 &f{coins}
 title-equipped: '&#B6E3D0已换戴 &#CBBFEF{title}'
 title-removed: '&#B6E3D0已卸下头衔，现在显示等级前缀。'
-store-title: '&#9FD9F6Momo Land &7· &f日常商店'
+store-title: '&#9FD9F6{server} &7· &f日常商店'
 store-category-name: '&#9FD9F6{category}'
 store-category-lore: ['&f看看今天需要些什么', '&#B2C3CF点击进入分类']
 store-products-title: '&#9FD9F6商店 &7· &f{category}'

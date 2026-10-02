@@ -10,7 +10,11 @@ When something goes wrong, work in this sequence: **`/nekocore status` → read 
 
 ## Compatibility scope
 
+`/nekocore doctor` and `/nekocore status` keep the original English module lines exactly as they are, and append a Chinese line explaining a `DISABLED` state. **A `DISABLED` line is not a server error**: it usually means an optional feature is switched off, a dependency is missing, or nothing has been configured yet. Turn on the ones you actually need, and don't fill in invented coordinates just to make the status screen all green.
+
 ### Explicitly verified
+
+The table identifies the compilation API and automated test environment, not a completed live Paper session. Real inventories, world plugins and display coexistence still need the manual checks in VERIFICATION.
 
 | Component | Version |
 | --- | --- |

@@ -17,7 +17,7 @@ public final class ConfigUpgrader {
             Path file = directory.resolve(name + ".yml");
             YamlConfiguration current = new YamlConfiguration(); current.load(file.toFile());
             String versionKey = name + "-version";
-            int targetVersion = name.equals("config") ? 8 : 7;
+            int targetVersion = name.equals("config") ? 9 : 8;
             int version = current.getInt(versionKey, 1);
             if (version > targetVersion) throw new IllegalArgumentException(name + ".yml 版本高于当前插件支持的版本");
             if (version == targetVersion) continue;
@@ -46,7 +46,7 @@ public final class ConfigUpgrader {
                 }
             }
             current.set(versionKey, targetVersion);
-            Path backup = directory.resolve(name + ".yml.pre-1.4.0-" + UUID.randomUUID() + ".bak");
+            Path backup = directory.resolve(name + ".yml.pre-public-1.1.0-" + UUID.randomUUID() + ".bak");
             Files.copy(file, backup);
             Path temporary = Files.createTempFile(directory, name + "-upgrade-", ".yml");
             try {

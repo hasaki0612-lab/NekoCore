@@ -22,13 +22,16 @@ public final class HologramService {
         displays.clear();
     }
     public TextDisplay show(String id, Location location, Component text) {
+        return show(id, location, text, Display.Billboard.CENTER);
+    }
+    public TextDisplay show(String id, Location location, Component text, Display.Billboard billboard) {
         Objects.requireNonNull(id); Objects.requireNonNull(location.getWorld());
         TextDisplay display = current(id);
         if (display == null || display.getWorld() != location.getWorld()) {
             if (display != null) display.remove();
             display = location.getWorld().spawn(location, TextDisplay.class, value -> {
                 value.setPersistent(false);
-                value.setBillboard(Display.Billboard.CENTER);
+                value.setBillboard(billboard);
                 value.setAlignment(TextDisplay.TextAlignment.CENTER);
                 value.setDefaultBackground(false);
                 value.setSeeThrough(false);
@@ -38,6 +41,7 @@ public final class HologramService {
             });
             displays.put(id, display.getUniqueId());
         } else if (!display.getLocation().equals(location)) display.teleport(location);
+        display.setBillboard(billboard);
         display.text(text);
         return display;
     }

@@ -294,7 +294,7 @@ These 20 IDs are **stable**. They appear in the database's rotation and progress
 
 **Display names can be changed freely; IDs cannot be touched.** Renaming `simple_gardener` to `gardener` orphans every progress record that already exists.
 
-Display names and descriptions live under `daily-tasks.tasks.<id>` in `messages.yml`, and editing them doesn't affect any progress. 🐾
+Display names and descriptions live under `daily-tasks.tasks.<id>` in `messages.yml`, and editing them doesn't affect any progress.
 
 ---
 

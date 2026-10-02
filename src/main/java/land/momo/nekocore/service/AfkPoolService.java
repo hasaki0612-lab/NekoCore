@@ -21,6 +21,7 @@ import java.util.logging.Level;
 public final class AfkPoolService implements Listener {
     static final class Session {
         final UUID token = UUID.randomUUID();
+        final long startedAt;
         long nextReward;
         long outsideSince = -1;
         long nextUpdate;
@@ -31,7 +32,7 @@ public final class AfkPoolService implements Listener {
         long rewardTitleUntil;
         long shownExp;
         long shownCoins;
-        Session(long nextReward) { this.nextReward = nextReward; }
+        Session(long startedAt, long nextReward) { this.startedAt = startedAt; this.nextReward = nextReward; }
     }
 
     private final NekoCorePlugin plugin;
@@ -64,17 +65,17 @@ public final class AfkPoolService implements Listener {
         Set<UUID> seen = new HashSet<>();
         for (Player player : online) {
             UUID id = player.getUniqueId(); seen.add(id);
-            if (!baseEligible(player)) { sessions.remove(id); continue; }
+            if (!baseEligible(player)) { finish(player, now); continue; }
             Session session = sessions.get(id);
             if (!player.isInWater()) {
                 if (session == null) continue;
                 if (session.outsideSince < 0) session.outsideSince = now;
-                if (now - session.outsideSince >= seconds(plugin.settings().afkPool().exitGrace())) sessions.remove(id);
+                if (now - session.outsideSince >= seconds(plugin.settings().afkPool().exitGrace())) finish(player, now);
                 else if (now >= session.nextUpdate) { session.nextUpdate = now + seconds(1); refreshTitle(player, session, now); }
                 continue;
             }
             if (session == null) {
-                session = new Session(now + seconds(plugin.settings().afkPool().reward().interval()));
+                session = new Session(now, now + seconds(plugin.settings().afkPool().reward().interval()));
                 sessions.put(id, session);
             }
             session.outsideSince = -1;
@@ -162,8 +163,22 @@ public final class AfkPoolService implements Listener {
 
     public void suppressTitle(UUID player, long ticks) { titleSuppressedUntil.put(player, nanoClock.getAsLong() + ticks * 50_000_000L); }
     @EventHandler public void quit(PlayerQuitEvent event) { sessions.remove(event.getPlayer().getUniqueId()); titleSuppressedUntil.remove(event.getPlayer().getUniqueId()); }
-    @EventHandler public void world(PlayerChangedWorldEvent event) { sessions.remove(event.getPlayer().getUniqueId()); }
-    @EventHandler public void death(PlayerDeathEvent event) { sessions.remove(event.getEntity().getUniqueId()); }
+    @EventHandler public void world(PlayerChangedWorldEvent event) { finish(event.getPlayer(), nanoClock.getAsLong()); }
+    @EventHandler public void death(PlayerDeathEvent event) { finish(event.getEntity(), nanoClock.getAsLong()); }
+
+    private void finish(Player player, long now) {
+        Session ended = sessions.remove(player.getUniqueId());
+        if (ended == null || !player.isOnline() || !plugin.settings().afkPool().endMessageEnabled()) return;
+        plugin.messages().send(player, "afk-pool.end-message",
+                Map.of("duration", duration(Math.max(0, now - ended.startedAt) / 1_000_000_000L)));
+    }
+
+    static String duration(long seconds) {
+        seconds = Math.max(0, seconds);
+        if (seconds < 60) return seconds + "秒";
+        if (seconds < 3600) return seconds / 60 + "分" + seconds % 60 + "秒";
+        return "%d小时%02d分%02d秒".formatted(seconds / 3600, seconds % 3600 / 60, seconds % 60);
+    }
 
     public boolean active(UUID player) { return sessions.containsKey(player); }
     public int sessionCount() { return sessions.size(); }

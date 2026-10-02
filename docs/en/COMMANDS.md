@@ -12,11 +12,12 @@ First, a shortcut that means nobody has to memorise anything: **most player comm
 
 ### The daily loop
 
-These five commands cover the bulk of what a player does each day.
+These six commands cover the bulk of what a player does each day.
 
 | Command | What it does |
 | --- | --- |
 | `/menu` | Opens the server panel |
+| `/tasks` | Opens the existing Daily Tasks GUI directly; unavailable when tasks are disabled |
 | `/checkin` | Claims today's check-in reward |
 | `/coins` | Shows your own coin balance |
 | `/sethome` | Records your current position as a home in the current world |
@@ -54,7 +55,7 @@ Output looks something like:
 Home in world · 128, 65, -340 (facing 90.0 / 0.0)
 ```
 
-**This command is more useful than it looks.** "I set a home, why can't I get back?" is a common complaint, and the usual answer is that it was set in the wrong world, or that the coordinates aren't safe any more. `/check` lets players verify that themselves instead of opening a ticket with you. ✦
+**This command is more useful than it looks.** "I set a home, why can't I get back?" is a common complaint, and the usual answer is that it was set in the wrong world, or that the coordinates aren't safe any more. `/check` lets players verify that themselves instead of opening a ticket with you.
 
 ### Store and portable storage
 
@@ -93,6 +94,22 @@ The other player receives a request and has 60 seconds to answer with `/yes`. On
 ---
 
 ## Admin commands
+
+### Admin name lookup
+
+`/nekocore lookup` answers a question you will run into the moment you edit a task target or add a store product: what is this item actually called? A `material:` the server does not recognise is the usual reason a product or a task quietly refuses to work, and this is the fastest way to find the right name. It uses the existing `nekocore.admin` permission, writes no files, and changes no data.
+
+| Command | What you get |
+| --- | --- |
+| `/nekocore lookup` | Hold an item in your main hand: its true English name, plus the `material: NAME` line to paste in. With an empty hand it reminds you to hold something. |
+| `/nekocore lookup bread` | A search over English Material names — exact matches first, then prefix, substring and close spelling — with at most 10 results |
+| `/nekocore lookup entity phanton` | The same search over entity types, which offers the close match `PHANTOM` |
+
+Spelling does not have to be perfect, and that is the point: `bred` finds `BREAD`, `phanton` finds `PHANTOM`. Capitalisation is ignored, and `minecraft:bread` works just as well as `bread`.
+
+Chinese keywords are **not** translated. The command says so rather than guessing at a translation, so searching 面包 gets you that message and nothing else. From the console you have to pass an English keyword, since there is no held item to read.
+
+Entity output is a list of candidates to choose from. When you are repairing a task list, swap out only the entry that is actually broken and leave the correct ones alone.
 
 Every admin command lives under `/nekocore` and requires the `nekocore.admin` permission, which defaults to OP only.
 
@@ -249,6 +266,7 @@ All of these default to `true`, which means ordinary players have them.
 | Permission | Command | Default |
 | --- | --- | --- |
 | `nekocore.menu` | `/menu` | `true` |
+| `nekocore.tasks` | `/tasks` | `true` |
 | `nekocore.coins` | `/coins` | `true` |
 | `nekocore.checkin` | `/checkin` | `true` |
 | `nekocore.home.set` | `/sethome` | `true` |

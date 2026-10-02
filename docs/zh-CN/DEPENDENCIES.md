@@ -343,7 +343,7 @@ location-prefix:
 mvn -B clean verify
 ```
 
-成品是 `target/NekoCore-1.0.0.jar`。
+成品是 `target/NekoCore-1.2.0.jar`。
 
 ---
 

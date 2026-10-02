@@ -47,7 +47,7 @@ plugins/NekoCore/nekocore.db-shm    ← 共享内存索引
 
 ## 版本与迁移
 
-Public 1.0.0 的 `PRAGMA user_version` 是 **5**。迁移脚本保留了 V1 到 V5：
+Public 1.2.0 的 `PRAGMA user_version` 是 **5**。 YAML 从 config 8 → 9、messages 7 → 8，与数据库版本无关；V1→V5、单 SQLite executor、commit 后更新缓存、Store / Bag pending / recovery / WAL 模型均未改变，不新增 V6。迁移脚本保留了 V1 到 V5：
 
 | 迁移 | 内容 |
 | --- | --- |
