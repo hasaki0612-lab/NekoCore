@@ -278,4 +278,4 @@ That line records where assistance came from. It does not mean OpenAI or DeepSee
 
 NekoCore is released under the **MIT License** — the full text is in [LICENSE](LICENSE). You're free to use, modify, and redistribute this code, including in closed-source projects, as long as you keep the copyright notice. Third-party component licenses remain separate.
 
-> **Note on runtime language:** in-game messages ship in Simplified Chinese. English *instructions* live in these docs; there is no runtime language system. This is documented rather than hidden.
+> **Note on runtime language:** the messages shown in game are **Simplified Chinese**. English is provided as **documentation only** — there is no runtime language switching, so an English reader will still see Chinese text in game. This is stated up front so you know before installing, rather than finding out afterwards.
